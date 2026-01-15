@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 /// A fixed-capacity, typed memory slab with manual element lifecycle.
+@safe
 public struct Slab<Element: ~Copyable>: ~Copyable {
     @usableFromInline
     var storage: UnsafeMutablePointer<Element>
@@ -25,19 +26,19 @@ public struct Slab<Element: ~Copyable>: ~Copyable {
         }
 
         if capacity == 0 {
-            self.storage = UnsafeMutablePointer<Element>(bitPattern: MemoryLayout<Element>.alignment)!
+            unsafe self.storage = UnsafeMutablePointer<Element>(bitPattern: MemoryLayout<Element>.alignment)!
             self.capacity = 0
             return
         }
 
         let storage = UnsafeMutablePointer<Element>.allocate(capacity: capacity)
-        self.storage = storage
+        unsafe self.storage = storage
         self.capacity = capacity
     }
 
     deinit {
         if capacity > 0 {
-            storage.deallocate()
+            unsafe storage.deallocate()
         }
     }
 }
@@ -48,35 +49,37 @@ extension Slab {
     @inlinable
     public mutating func initialize(at index: Int, to value: consuming Element) {
         precondition(index >= 0 && index < capacity)
-        (storage + index).initialize(to: value)
+        unsafe (storage + index).initialize(to: value)
     }
 
     @inlinable
     public mutating func deinitialize(at index: Int) -> Element {
         precondition(index >= 0 && index < capacity)
-        return (storage + index).move()
+        return unsafe (storage + index).move()
     }
 }
 
 // MARK: - Pointer Access
 
 extension Slab {
+    @unsafe
     @inlinable
     public func withUnsafePointer<R, E: Swift.Error>(
         at index: Int,
         _ body: (UnsafePointer<Element>) throws(E) -> R
     ) throws(E) -> R {
         precondition(index >= 0 && index < capacity)
-        return try body(storage + index)
+        return try unsafe body(storage + index)
     }
 
+    @unsafe
     @inlinable
     public mutating func withUnsafeMutablePointer<R, E: Swift.Error>(
         at index: Int,
         _ body: (UnsafeMutablePointer<Element>) throws(E) -> R
     ) throws(E) -> R {
         precondition(index >= 0 && index < capacity)
-        return try body(storage + index)
+        return try unsafe body(storage + index)
     }
 }
 

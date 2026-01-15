@@ -38,3 +38,11 @@ let package = Package(
     ],
     swiftLanguageModes: [.v6]
 )
+
+let settings: [SwiftSetting] = [
+    .strictMemorySafety(),
+]
+
+for target in package.targets {
+    target.swiftSettings = (target.swiftSettings ?? []) + settings
+}
