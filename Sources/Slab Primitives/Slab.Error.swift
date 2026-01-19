@@ -17,5 +17,8 @@ extension Slab where Element: ~Copyable {
 
         /// Memory allocation failed.
         case allocationFailed
+
+        /// The index is out of bounds.
+        case indexOutOfBounds(index: Int, capacity: Int)
     }
 }

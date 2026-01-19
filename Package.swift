@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "swift-storage-primitives",
+    name: "swift-slab-primitives",
     platforms: [
         .macOS(.v26),
         .iOS(.v26),
@@ -13,8 +13,8 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "Storage Primitives",
-            targets: ["Storage Primitives"]
+            name: "Slab Primitives",
+            targets: ["Slab Primitives"]
         )
     ],
     dependencies: [
@@ -22,7 +22,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Storage Primitives",
+            name: "Slab Primitives",
             dependencies: [
                 .product(name: "Standard Library Extensions", package: "swift-standard-library-extensions")
             ]
