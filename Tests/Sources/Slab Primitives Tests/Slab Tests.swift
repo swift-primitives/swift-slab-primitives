@@ -3,7 +3,7 @@
 
 import Testing
 
-@testable import Storage_Primitives
+@testable import Slab_Primitives
 
 @Suite
 struct `Slab - Storage Primitives` {

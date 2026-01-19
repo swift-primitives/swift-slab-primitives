@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "swift-storage-primitives-tests",
+    name: "swift-slab-primitives-tests",
     platforms: [
         .macOS(.v26),
         .iOS(.v26),
@@ -21,13 +21,13 @@ let package = Package(
     ],
     targets: [
         .testTarget(
-            name: "Storage Primitives Tests",
+            name: "Slab Primitives Tests",
             dependencies: [
-                .product(name: "Storage Primitives", package: "swift-storage-primitives"),
+                .product(name: "Slab Primitives", package: "swift-slab-primitives"),
                 .product(name: "Testing", package: "swift-testing"),
                 .product(name: "Test Primitives", package: "swift-test-primitives"),
             ],
-            path: "Sources/Storage Primitives Tests"
+            path: "Sources/Slab Primitives Tests"
         ),
     ],
     swiftLanguageModes: [.v6]
