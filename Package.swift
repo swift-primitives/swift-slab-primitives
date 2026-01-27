@@ -21,7 +21,7 @@ let package = Package(
         .package(path: "../swift-standard-library-extensions"),
         .package(path: "../swift-index-primitives"),
         .package(path: "../swift-bit-primitives"),
-        .package(path: "../swift-reference-primitives"),
+        .package(path: "../swift-ownership-primitives"),
         .package(path: "../swift-collection-primitives"),
     ],
     targets: [
@@ -31,7 +31,7 @@ let package = Package(
                 .product(name: "Standard Library Extensions", package: "swift-standard-library-extensions"),
                 .product(name: "Index Primitives", package: "swift-index-primitives"),
                 .product(name: "Bit Primitives", package: "swift-bit-primitives"),
-                .product(name: "Reference Primitives", package: "swift-reference-primitives"),
+                .product(name: "Ownership Primitives", package: "swift-ownership-primitives"),
                 .product(name: "Collection Primitives", package: "swift-collection-primitives"),
             ]
         )
