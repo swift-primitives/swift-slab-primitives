@@ -39,8 +39,7 @@ extension Slab.Indexed where Element: ~Copyable, Tag: ~Copyable {
     /// Returns the first vacant (unoccupied) slot index, or `nil` if full.
     @inlinable
     public func firstVacant() -> Index<Tag>? {
-        guard let index = _base.firstVacant() else { return nil }
-        return index.retag(Tag.self)
+        _base.firstVacant()?.retag(Tag.self)
     }
 }
 
@@ -56,7 +55,7 @@ extension Slab.Indexed where Element: ~Copyable, Tag: ~Copyable {
         try _base.insert(consume element, at: index.retag(Element.self))
     }
 
-    /// Inserts an element at the specified slot index without bounds checking.
+    /// Inserts an element at the specified slot index without occupancy checking.
     @inlinable
     public mutating func insert(
         _ element: consuming Element,
@@ -73,7 +72,7 @@ extension Slab.Indexed where Element: ~Copyable, Tag: ~Copyable {
         try _base.remove(at: index.retag(Element.self))
     }
 
-    /// Removes and returns the element at the specified slot index without bounds checking.
+    /// Removes and returns the element at the specified slot index without occupancy checking.
     @inlinable
     public mutating func remove(
         __unchecked index: Index<Tag>
@@ -91,8 +90,7 @@ extension Slab.Indexed where Element: ~Copyable, Tag: ~Copyable {
     public mutating func insert(
         _ element: consuming Element
     ) throws(Slab<Element>.Error) -> Index<Tag> {
-        let index = try _base.insert(consume element)
-        return index.retag(Tag.self)
+        try _base.insert(consume element).retag(Tag.self)
     }
 
     /// Replaces the element at the specified slot and returns the old element.

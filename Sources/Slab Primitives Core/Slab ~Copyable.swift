@@ -39,8 +39,7 @@ extension Slab where Element: ~Copyable {
     /// Returns the first vacant (unoccupied) slot index, or `nil` if full.
     @inlinable
     public func firstVacant() -> Index<Element>? {
-        guard let bitIndex = _buffer.firstVacant() else { return nil }
-        return bitIndex.retag(Element.self)
+        _buffer.firstVacant()?.retag(Element.self)
     }
 }
 
@@ -65,7 +64,7 @@ extension Slab where Element: ~Copyable {
         _buffer.insert(consume element, at: slot)
     }
 
-    /// Inserts an element at the specified slot index without bounds checking.
+    /// Inserts an element at the specified slot index without occupancy checking.
     @inlinable
     public mutating func insert(
         _ element: consuming Element,
@@ -90,7 +89,7 @@ extension Slab where Element: ~Copyable {
         return _buffer.remove(at: slot)
     }
 
-    /// Removes and returns the element at the specified slot index without bounds checking.
+    /// Removes and returns the element at the specified slot index without occupancy checking.
     @inlinable
     public mutating func remove(
         __unchecked index: Index<Element>
