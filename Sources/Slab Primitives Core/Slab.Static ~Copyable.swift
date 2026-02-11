@@ -117,9 +117,7 @@ extension Slab.Static where Element: ~Copyable {
         guard _buffer.isOccupied(at: slot) else {
             throw .vacant
         }
-        let old = _buffer.remove(at: slot)
-        _buffer.insert(consume element, at: slot)
-        return old
+        return _buffer.update(at: slot, with: consume element)
     }
 
     /// Removes all elements from the slab.
