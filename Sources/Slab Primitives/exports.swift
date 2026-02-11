@@ -1,8 +1,3 @@
-// exports.swift
-// Re-export dependencies for consumers.
-
-@_exported import Standard_Library_Extensions
-@_exported import Index_Primitives
-@_exported import Bit_Primitives
-@_exported import Ownership_Primitives
-//@_exported import Collection_Primitives
+@_exported public import Slab_Primitives_Core
+@_exported public import Slab_Dynamic_Primitives
+@_exported public import Slab_Static_Primitives
