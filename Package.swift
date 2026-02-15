@@ -76,6 +76,13 @@ let package = Package(
                 "Slab Static Primitives",
             ]
         ),
+        .testTarget(
+            name: "Slab Primitives Tests",
+            dependencies: [
+                "Slab Primitives",
+                .product(name: "Buffer Primitives Test Support", package: "swift-buffer-primitives"),
+            ]
+        ),
     ],
     swiftLanguageModes: [.v6]
 )
