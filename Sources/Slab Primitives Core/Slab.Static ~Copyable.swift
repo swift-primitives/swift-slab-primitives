@@ -34,7 +34,7 @@ extension Slab.Static where Element: ~Copyable {
     /// Whether the slot at the given index is occupied.
     @inlinable
     public func isOccupied(at index: Index<Element>.Bounded<wordCount>) -> Bool {
-        _buffer.isOccupied(at: Index<Element>(index).retag(Bit.self))
+        _buffer.isOccupied(at: index.retag(Bit.self))
     }
 
     /// Returns the first vacant (unoccupied) slot index, or `nil` if full.
@@ -54,7 +54,7 @@ extension Slab.Static where Element: ~Copyable {
         _ element: consuming Element,
         at index: Index<Element>.Bounded<wordCount>
     ) throws(Slab<Element>.Error) {
-        let slot = Index<Element>(index).retag(Bit.self)
+        let slot = index.retag(Bit.self)
         guard !_buffer.isOccupied(at: slot) else {
             throw .occupied
         }
@@ -67,7 +67,7 @@ extension Slab.Static where Element: ~Copyable {
         _ element: consuming Element,
         __unchecked index: Index<Element>.Bounded<wordCount>
     ) {
-        _buffer.insert(consume element, at: Index<Element>(index).retag(Bit.self))
+        _buffer.insert(consume element, at: index.retag(Bit.self))
     }
 
     /// Removes and returns the element at the specified slot index.
@@ -75,7 +75,7 @@ extension Slab.Static where Element: ~Copyable {
     public mutating func remove(
         at index: Index<Element>.Bounded<wordCount>
     ) throws(Slab<Element>.Error) -> Element {
-        let slot = Index<Element>(index).retag(Bit.self)
+        let slot = index.retag(Bit.self)
         guard _buffer.isOccupied(at: slot) else {
             throw .vacant
         }
@@ -87,7 +87,7 @@ extension Slab.Static where Element: ~Copyable {
     public mutating func remove(
         __unchecked index: Index<Element>.Bounded<wordCount>
     ) -> Element {
-        _buffer.remove(at: Index<Element>(index).retag(Bit.self))
+        _buffer.remove(at: index.retag(Bit.self))
     }
 }
 
@@ -103,7 +103,7 @@ extension Slab.Static where Element: ~Copyable {
         guard let slot = firstVacant() else {
             throw .full
         }
-        _buffer.insert(consume element, at: Index<Element>(slot).retag(Bit.self))
+        _buffer.insert(consume element, at: slot.retag(Bit.self))
         return slot
     }
 
@@ -113,7 +113,7 @@ extension Slab.Static where Element: ~Copyable {
         at index: Index<Element>.Bounded<wordCount>,
         with element: consuming Element
     ) throws(Slab<Element>.Error) -> Element {
-        let slot = Index<Element>(index).retag(Bit.self)
+        let slot = index.retag(Bit.self)
         guard _buffer.isOccupied(at: slot) else {
             throw .vacant
         }

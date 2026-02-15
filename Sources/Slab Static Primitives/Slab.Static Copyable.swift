@@ -19,7 +19,7 @@ extension Slab.Static where Element: Copyable {
     /// Returns the element at the specified slot without removing it.
     @inlinable
     public func peek(at index: Index<Element>.Bounded<wordCount>) -> Element? {
-        let slot = Index<Element>(index).retag(Bit.self)
+        let slot = index.retag(Bit.self)
         guard _buffer.isOccupied(at: slot) else { return nil }
         return _buffer.peek(at: slot)
     }
