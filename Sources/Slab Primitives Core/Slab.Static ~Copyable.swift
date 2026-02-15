@@ -40,8 +40,7 @@ extension Slab.Static where Element: ~Copyable {
     /// Returns the first vacant (unoccupied) slot index, or `nil` if full.
     @inlinable
     public func firstVacant() -> Index<Element>.Bounded<wordCount>? {
-        guard let bitIndex = _buffer.firstVacant() else { return nil }
-        return .init(bitIndex.retag(Element.self))
+        _buffer.firstVacant()?.retag(Element.self)
     }
 }
 
