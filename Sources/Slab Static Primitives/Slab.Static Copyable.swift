@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 public import Slab_Primitives_Core
+public import Buffer_Slab_Inline_Primitives
 import Index_Primitives
 import Bit_Primitives
 

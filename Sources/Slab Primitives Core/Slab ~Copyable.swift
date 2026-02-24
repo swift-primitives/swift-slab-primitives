@@ -162,7 +162,7 @@ extension Slab where Element: ~Copyable {
     }
 }
 
-extension Slab: Sequence.Drain.`Protocol` {
+extension Slab: Sequence.Drain.`Protocol` where Element: ~Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
         _buffer.drain(body)

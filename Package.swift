@@ -51,6 +51,7 @@ let package = Package(
                 .product(name: "Ownership Primitives", package: "swift-ownership-primitives"),
                 .product(name: "Property Primitives", package: "swift-property-primitives"),
                 .product(name: "Buffer Slab Primitives", package: "swift-buffer-primitives"),
+                .product(name: "Buffer Slab Inline Primitives", package: "swift-buffer-primitives"),
             ]
         ),
         .target(
@@ -65,6 +66,7 @@ let package = Package(
             name: "Slab Static Primitives",
             dependencies: [
                 "Slab Primitives Core",
+                .product(name: "Buffer Slab Inline Primitives", package: "swift-buffer-primitives"),
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
