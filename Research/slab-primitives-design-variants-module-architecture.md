@@ -2,9 +2,9 @@
 
 <!--
 ---
-version: 1.0.0
-last_updated: 2026-02-11
-status: IN_PROGRESS
+version: 1.0.1
+last_updated: 2026-03-15
+status: DEFERRED
 research_tier: 2
 applies_to: [swift-slab-primitives]
 normative: false
@@ -929,3 +929,15 @@ extension Slab.Indexed where Element: ~Copyable, Tag: ~Copyable {
 8. [primitives-taxonomy-naming-layering-audit.md](../../Research/primitives-taxonomy-naming-layering-audit.md) — Full taxonomy audit.
 9. Nystrom, R. (2014). *Game Programming Patterns*, Chapter 19: "Object Pool."
 10. Green, T.R.G. (1989). "Cognitive Dimensions of Notations." *People and Computers V*, 443-460.
+
+---
+
+## Deferral
+
+**Date**: 2026-03-15
+**Previous status**: IN_PROGRESS (since 2026-02-11)
+**New status**: DEFERRED
+
+**Blocker/Reason**: Document provides complete design for slab-primitives variants (Slab, Slab.Static, Slab.Indexed), module split (Core + Inline modules), API surface, and implementation plan with 4 phases. Analysis is thorough but implementation has not started. The package remains a monolithic stub wrapping Buffer.Slab.Bounded. Deferred because slab-primitives is lower priority than active work streams (leaf package audit, typed throws, rendering architecture).
+
+**Resumption trigger**: When slab-primitives is needed by a downstream consumer, or when data structure packages enter a parity/completeness cycle.
