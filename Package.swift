@@ -28,6 +28,10 @@ let package = Package(
             name: "Slab Static Primitives",
             targets: ["Slab Static Primitives"]
         ),
+        .library(
+            name: "Slab Primitives Test Support",
+            targets: ["Slab Primitives Test Support"]
+        ),
     ],
     dependencies: [
         .package(path: "../swift-standard-library-extensions"),
@@ -41,6 +45,8 @@ let package = Package(
         .package(path: "../swift-buffer-primitives"),
     ],
     targets: [
+
+        // MARK: - Core
         .target(
             name: "Slab Primitives Core",
             dependencies: [
@@ -54,6 +60,8 @@ let package = Package(
                 .product(name: "Buffer Slab Inline Primitives", package: "swift-buffer-primitives"),
             ]
         ),
+
+        // MARK: - Dynamic
         .target(
             name: "Slab Dynamic Primitives",
             dependencies: [
@@ -62,6 +70,8 @@ let package = Package(
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
+
+        // MARK: - Static
         .target(
             name: "Slab Static Primitives",
             dependencies: [
@@ -70,6 +80,8 @@ let package = Package(
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
+
+        // MARK: - Umbrella
         .target(
             name: "Slab Primitives",
             dependencies: [
@@ -78,12 +90,29 @@ let package = Package(
                 "Slab Static Primitives",
             ]
         ),
+
+        // MARK: - Tests
         .testTarget(
             name: "Slab Primitives Tests",
             dependencies: [
                 "Slab Primitives",
                 .product(name: "Buffer Primitives Test Support", package: "swift-buffer-primitives"),
             ]
+        ),
+
+        // MARK: - Test Support
+        .target(
+            name: "Slab Primitives Test Support",
+            dependencies: [
+                "Slab Primitives",
+                .product(name: "Index Primitives Test Support", package: "swift-index-primitives"),
+                .product(name: "Finite Primitives Test Support", package: "swift-finite-primitives"),
+                .product(name: "Bit Primitives Test Support", package: "swift-bit-primitives"),
+                .product(name: "Buffer Primitives Test Support", package: "swift-buffer-primitives"),
+                .product(name: "Collection Primitives Test Support", package: "swift-collection-primitives"),
+                .product(name: "Sequence Primitives Test Support", package: "swift-sequence-primitives"),
+            ],
+            path: "Tests/Support"
         ),
     ],
     swiftLanguageModes: [.v6]
