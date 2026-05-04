@@ -27,11 +27,6 @@ jobs:
   docs:
     uses: swift-institute/.github/.github/workflows/swift-docs.yml@main
     with:
-      umbrella-module: Slab_Primitives
-      umbrella-display-name: "Slab Primitives"
-      umbrella-bundle-id: "swift-slab-primitives.Slab-Primitives"
-      umbrella-docc-path: "Sources/Slab Primitives/Slab Primitives.docc"
-      exclude-modules: "Slab_Primitives_Test_Support"
       enable-private-repos: true
     secrets:
       PRIVATE_REPO_TOKEN: ${{ secrets.PRIVATE_REPO_TOKEN }}
