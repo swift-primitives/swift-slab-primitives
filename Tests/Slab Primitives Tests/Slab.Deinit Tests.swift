@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Testing
+
 @testable import Slab_Primitives
 
 @Suite("Slab - Deinit")
@@ -25,7 +26,10 @@ struct SlabDeinitTests {
     struct TrackedElement: ~Copyable {
         let id: Int
         let tracker: Tracker
-        init(_ id: Int, tracker: Tracker) { self.id = id; self.tracker = tracker }
+        init(_ id: Int, tracker: Tracker) {
+            self.id = id
+            self.tracker = tracker
+        }
         deinit { tracker.append(id) }
     }
 

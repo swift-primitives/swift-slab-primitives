@@ -9,11 +9,11 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Buffer_Slab_Primitives
-public import Buffer_Slab_Inline_Primitives
-import Index_Primitives
-import Finite_Primitives
 import Bit_Primitives
+public import Buffer_Slab_Inline_Primitives
+import Buffer_Slab_Primitives
+import Finite_Primitives
+import Index_Primitives
 
 // MARK: - Occupancy Queries
 

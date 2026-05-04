@@ -9,8 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Testing
 import Buffer_Primitives_Test_Support
+import Testing
 
 @testable import Slab_Primitives
 

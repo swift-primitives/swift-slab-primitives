@@ -9,9 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
+import Bit_Primitives
 import Buffer_Slab_Primitives
 import Index_Primitives
-import Bit_Primitives
 
 // MARK: - Occupancy Queries
 

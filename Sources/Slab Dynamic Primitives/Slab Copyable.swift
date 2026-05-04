@@ -9,9 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Slab_Primitives_Core
-import Index_Primitives
 import Bit_Primitives
+import Index_Primitives
+public import Slab_Primitives_Core
 
 // MARK: - Non-Destructive Read
 
