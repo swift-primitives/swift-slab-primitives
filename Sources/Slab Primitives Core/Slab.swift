@@ -23,6 +23,9 @@ import Index_Primitives
 ///
 /// The consumer-chosen `insert(_:at:)` is the primitive operation.
 /// Auto-insert `insert(_:)` is composed from `firstVacant()` + `insert(_:at:)`.
+// WHY: Category D — structural Sendable workaround; the type is
+// WHY: structurally value-safe but the compiler cannot synthesize
+// WHY: Sendable due to a stored pointer / generic parameter shape.
 @safe
 public struct Slab<Element: ~Copyable>: ~Copyable {
     @usableFromInline
