@@ -105,11 +105,11 @@ public struct Slab<Element: ~Copyable>: ~Copyable {
 
 // Note: Slab is always ~Copyable because Buffer.Slab.Bounded is unconditionally ~Copyable
 // (Bit.Vector in the header is ~Copyable).
-extension Slab: @unsafe @unchecked Sendable where Element: Sendable {}
+extension Slab: Sendable where Element: Sendable {}
 
-extension Slab.Static: @unsafe @unchecked Sendable where Element: Sendable {}
+extension Slab.Static: Sendable where Element: Sendable {}
 
-extension Slab.Indexed: @unsafe @unchecked Sendable where Element: Sendable {}
+extension Slab.Indexed: Sendable where Element: Sendable {}
 
 // NOTE: Drain conformances for Slab.Static and Slab.Indexed cannot be declared
 // here or in separate files due to constraint poisoning from Sequence.Drain.Protocol's
