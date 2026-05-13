@@ -105,9 +105,9 @@ public struct Slab<Element: ~Copyable>: ~Copyable {
 
 // Note: Slab is always ~Copyable because Buffer.Slab.Bounded is unconditionally ~Copyable
 // (Bit.Vector in the header is ~Copyable).
-extension Slab: Sendable where Element: Sendable {}
+extension Slab: @unsafe @unchecked Sendable where Element: Sendable {}
 
-extension Slab.Static: Sendable where Element: Sendable {}
+extension Slab.Static: @unsafe @unchecked Sendable where Element: Sendable {}
 
 extension Slab.Indexed: Sendable where Element: Sendable {}
 
