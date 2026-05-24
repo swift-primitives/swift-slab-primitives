@@ -41,6 +41,7 @@ let package = Package(
         .package(path: "../swift-collection-primitives"),
         .package(path: "../swift-sequence-primitives"),
         .package(path: "../swift-buffer-primitives"),
+        .package(path: "../swift-buffer-slab-primitives"),
     ],
     targets: [
 
@@ -52,8 +53,8 @@ let package = Package(
                 .product(name: "Finite Primitives", package: "swift-finite-primitives"),
                 .product(name: "Bit Primitives", package: "swift-bit-primitives"),
                 .product(name: "Property Primitives", package: "swift-property-primitives"),
-                .product(name: "Buffer Slab Primitives", package: "swift-buffer-primitives"),
-                .product(name: "Buffer Slab Inline Primitives", package: "swift-buffer-primitives"),
+                .product(name: "Buffer Slab Primitives", package: "swift-buffer-slab-primitives"),
+                .product(name: "Buffer Slab Inline Primitives", package: "swift-buffer-slab-primitives"),
             ]
         ),
 
@@ -72,7 +73,7 @@ let package = Package(
             name: "Slab Static Primitives",
             dependencies: [
                 "Slab Primitives Core",
-                .product(name: "Buffer Slab Inline Primitives", package: "swift-buffer-primitives"),
+                .product(name: "Buffer Slab Inline Primitives", package: "swift-buffer-slab-primitives"),
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
