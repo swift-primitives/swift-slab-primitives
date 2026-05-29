@@ -34,14 +34,14 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(path: "../swift-index-primitives"),
-        .package(path: "../swift-finite-primitives"),
-        .package(path: "../swift-bit-primitives"),
-        .package(path: "../swift-property-primitives"),
-        .package(path: "../swift-collection-primitives"),
-        .package(path: "../swift-sequence-primitives"),
-        .package(path: "../swift-buffer-primitives"),
-        .package(path: "../swift-buffer-slab-primitives"),
+        .package(url: "https://github.com/swift-primitives/swift-index-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-finite-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-bit-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-property-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-collection-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-sequence-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-buffer-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-buffer-slab-primitives.git", branch: "main"),
     ],
     targets: [
 
