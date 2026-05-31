@@ -9,22 +9,13 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Index_Primitives
-public import Slab_Primitives_Core
+import Buffer_Slab_Primitives
+public import Property_Primitives
+public import Sequence_Primitives
 
-// MARK: - Non-Destructive Read
+// MARK: - Drain (Consuming Iteration)
 
-extension Slab.Indexed where Element: Copyable, Tag: ~Copyable {
-    /// Returns the element at the specified slot without removing it.
-    @inlinable
-    public func peek(at index: Index<Tag>) -> Element? {
-        _base.peek(at: index.retag(Element.self))
-    }
-}
-
-// MARK: - Drain (Moved from Core to avoid constraint poisoning on nested types)
-
-extension Slab.Indexed where Element: Copyable, Tag: ~Copyable {
+extension Slab where Element: ~Copyable {
     /// Consuming iteration over all occupied slots.
     @inlinable
     public var drain: Property<Sequence.Drain, Self>.Inout {
@@ -38,9 +29,9 @@ extension Slab.Indexed where Element: Copyable, Tag: ~Copyable {
     }
 }
 
-extension Slab.Indexed: Sequence.Drain.`Protocol` {
+extension Slab: Sequence.Drain.`Protocol` where Element: ~Copyable {
     @inlinable
     public mutating func drain(_ body: (consuming Element) -> Void) {
-        _base.drain(body)
+        _buffer.drain(body)
     }
 }

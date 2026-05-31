@@ -9,5 +9,16 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_exported public import Slab_Static_Primitive
-@_exported public import Sequence_Primitives
+extension Slab where Element: ~Copyable {
+    /// Errors that can occur during slab operations.
+    public enum Error: Swift.Error, Sendable, Equatable {
+        /// The slab is full — no vacant slot exists.
+        case full
+
+        /// The slot is not occupied.
+        case vacant
+
+        /// The slot is already occupied.
+        case occupied
+    }
+}

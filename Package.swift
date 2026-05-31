@@ -12,26 +12,16 @@ let package = Package(
         .visionOS(.v26)
     ],
     products: [
-        .library(
-            name: "Slab Primitives",
-            targets: ["Slab Primitives"]
-        ),
-        .library(
-            name: "Slab Primitives Core",
-            targets: ["Slab Primitives Core"]
-        ),
-        .library(
-            name: "Slab Dynamic Primitives",
-            targets: ["Slab Dynamic Primitives"]
-        ),
-        .library(
-            name: "Slab Static Primitives",
-            targets: ["Slab Static Primitives"]
-        ),
-        .library(
-            name: "Slab Primitives Test Support",
-            targets: ["Slab Primitives Test Support"]
-        ),
+        // MARK: - Base
+        .library(name: "Slab Primitive", targets: ["Slab Primitive"]),
+        .library(name: "Slab Primitives", targets: ["Slab Primitives"]),
+
+        // MARK: - Static variant
+        .library(name: "Slab Static Primitive", targets: ["Slab Static Primitive"]),
+        .library(name: "Slab Static Primitives", targets: ["Slab Static Primitives"]),
+
+        // MARK: - Test Support
+        .library(name: "Slab Primitives Test Support", targets: ["Slab Primitives Test Support"]),
     ],
     dependencies: [
         .package(url: "https://github.com/swift-primitives/swift-index-primitives.git", branch: "main"),
@@ -45,46 +35,55 @@ let package = Package(
     ],
     targets: [
 
-        // MARK: - Core
+        // MARK: - Base type (Slab heap + Slab.Error + Slab.Indexed phantom-tag wrapper)
         .target(
-            name: "Slab Primitives Core",
+            name: "Slab Primitive",
             dependencies: [
-                .product(name: "Index Primitives", package: "swift-index-primitives"),
-                .product(name: "Finite Primitives", package: "swift-finite-primitives"),
                 .product(name: "Bit Primitives", package: "swift-bit-primitives"),
-                .product(name: "Property Primitives", package: "swift-property-primitives"),
                 .product(name: "Buffer Slab Primitives", package: "swift-buffer-slab-primitives"),
-                .product(name: "Buffer Slab Inline Primitives", package: "swift-buffer-slab-primitives"),
-            ]
-        ),
-
-        // MARK: - Dynamic
-        .target(
-            name: "Slab Dynamic Primitives",
-            dependencies: [
-                "Slab Primitives Core",
-                .product(name: "Collection Primitives", package: "swift-collection-primitives"),
+                .product(name: "Index Primitives", package: "swift-index-primitives"),
+                .product(name: "Property Primitives", package: "swift-property-primitives"),
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
 
-        // MARK: - Static
+        // MARK: - Static type
+        .target(
+            name: "Slab Static Primitive",
+            dependencies: [
+                "Slab Primitive",
+                .product(name: "Bit Primitives", package: "swift-bit-primitives"),
+                .product(name: "Buffer Slab Inline Primitives", package: "swift-buffer-slab-primitives"),
+                .product(name: "Finite Primitives", package: "swift-finite-primitives"),
+                .product(name: "Index Primitives", package: "swift-index-primitives"),
+            ]
+        ),
+
+        // MARK: - Static ops
         .target(
             name: "Slab Static Primitives",
             dependencies: [
-                "Slab Primitives Core",
+                "Slab Static Primitive",
+                .product(name: "Bit Primitives", package: "swift-bit-primitives"),
                 .product(name: "Buffer Slab Inline Primitives", package: "swift-buffer-slab-primitives"),
+                .product(name: "Index Primitives", package: "swift-index-primitives"),
+                .product(name: "Property Primitives", package: "swift-property-primitives"),
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
 
-        // MARK: - Umbrella
+        // MARK: - Base ops + Umbrella ([MOD-005] dual-role: base conformances + re-export of all variants)
         .target(
             name: "Slab Primitives",
             dependencies: [
-                "Slab Primitives Core",
-                "Slab Dynamic Primitives",
+                "Slab Primitive",
+                "Slab Static Primitive",
                 "Slab Static Primitives",
+                .product(name: "Bit Primitives", package: "swift-bit-primitives"),
+                .product(name: "Buffer Slab Primitives", package: "swift-buffer-slab-primitives"),
+                .product(name: "Index Primitives", package: "swift-index-primitives"),
+                .product(name: "Property Primitives", package: "swift-property-primitives"),
+                .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
             ]
         ),
 

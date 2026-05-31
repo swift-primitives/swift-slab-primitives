@@ -10,10 +10,10 @@
 // ===----------------------------------------------------------------------===//
 
 import Bit_Primitives
-public import Buffer_Slab_Inline_Primitives
-import Buffer_Slab_Primitives
+import Buffer_Slab_Inline_Primitives
 import Finite_Primitives
 import Index_Primitives
+import Slab_Primitive
 
 // MARK: - Occupancy Queries
 
@@ -126,6 +126,3 @@ extension Slab.Static where Element: ~Copyable {
         _buffer.removeAll()
     }
 }
-
-// MARK: - Drain
-// NOTE: Drain conformance moved to separate Copyable module to avoid constraint poisoning

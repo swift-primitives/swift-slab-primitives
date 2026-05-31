@@ -9,18 +9,15 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Bit_Primitives
 import Index_Primitives
-public import Slab_Primitives_Core
+public import Slab_Primitive
 
 // MARK: - Non-Destructive Read
 
-extension Slab where Element: Copyable {
+extension Slab.Indexed where Element: Copyable, Tag: ~Copyable {
     /// Returns the element at the specified slot without removing it.
     @inlinable
-    public func peek(at index: Index<Element>) -> Element? {
-        let slot = index.retag(Bit.self)
-        guard _buffer.isOccupied(at: slot) else { return nil }
-        return _buffer.peek(at: slot)
+    public func peek(at index: Index<Tag>) -> Element? {
+        _base.peek(at: index.retag(Element.self))
     }
 }

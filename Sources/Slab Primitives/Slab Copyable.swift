@@ -10,16 +10,16 @@
 // ===----------------------------------------------------------------------===//
 
 import Bit_Primitives
-public import Buffer_Slab_Inline_Primitives
+import Buffer_Slab_Primitives
 import Index_Primitives
-public import Slab_Static_Primitive
+public import Slab_Primitive
 
 // MARK: - Non-Destructive Read
 
-extension Slab.Static where Element: Copyable {
+extension Slab where Element: Copyable {
     /// Returns the element at the specified slot without removing it.
     @inlinable
-    public func peek(at index: Index<Element>.Bounded<wordCount>) -> Element? {
+    public func peek(at index: Index<Element>) -> Element? {
         let slot = index.retag(Bit.self)
         guard _buffer.isOccupied(at: slot) else { return nil }
         return _buffer.peek(at: slot)

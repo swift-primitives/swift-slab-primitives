@@ -9,8 +9,6 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Bit_Primitives
-import Buffer_Slab_Primitives
 import Index_Primitives
 
 // MARK: - Occupancy Queries
@@ -108,6 +106,3 @@ extension Slab.Indexed where Element: ~Copyable, Tag: ~Copyable {
         _base.removeAll()
     }
 }
-
-// MARK: - Drain
-// NOTE: Drain conformance moved to separate Copyable module to avoid constraint poisoning

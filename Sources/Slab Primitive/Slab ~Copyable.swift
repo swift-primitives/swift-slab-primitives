@@ -145,26 +145,3 @@ extension Slab where Element: ~Copyable {
         _buffer.removeAll()
     }
 }
-
-// MARK: - Drain (Consuming Iteration)
-
-extension Slab where Element: ~Copyable {
-    /// Consuming iteration over all occupied slots.
-    @inlinable
-    public var drain: Property<Sequence.Drain, Self>.Inout {
-        mutating _read {
-            yield Property<Sequence.Drain, Self>.Inout(&self)
-        }
-        mutating _modify {
-            var accessor = Property<Sequence.Drain, Self>.Inout(&self)
-            yield &accessor
-        }
-    }
-}
-
-extension Slab: Sequence.Drain.`Protocol` where Element: ~Copyable {
-    @inlinable
-    public mutating func drain(_ body: (consuming Element) -> Void) {
-        _buffer.drain(body)
-    }
-}

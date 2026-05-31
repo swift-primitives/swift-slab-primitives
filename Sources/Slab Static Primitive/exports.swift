@@ -10,12 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 // exports.swift
-// Re-exports for Slab Primitives — the base-ops module that doubles as the
-// [MOD-005] umbrella. Users import Slab_Primitives and get the slab discipline:
-// the base Slab type + Copyable conformances (this module), plus the Static
-// storage variant. Per [MOD-005] the base-ops plural doubles as the package
-// umbrella.
+// Re-exports for Slab Static Primitive (the inline-storage slab type module).
 
 @_exported public import Slab_Primitive
-@_exported public import Slab_Static_Primitives
-@_exported public import Sequence_Primitives
+@_exported public import Buffer_Slab_Inline_Primitives

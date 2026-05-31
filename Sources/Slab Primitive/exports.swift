@@ -9,5 +9,10 @@
 //
 // ===----------------------------------------------------------------------===//
 
-@_exported public import Slab_Static_Primitive
-@_exported public import Sequence_Primitives
+// exports.swift
+// Re-exports for Slab Primitive (the base heap-backed slab type module).
+// Declares Slab (heap), Slab.Error, and Slab.Indexed (phantom-typed wrapper);
+// re-exports the slab storage + index domains the base type composes.
+
+@_exported public import Buffer_Slab_Primitives
+@_exported public import Index_Primitives
