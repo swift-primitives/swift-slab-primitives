@@ -27,17 +27,6 @@
       "statusRaw": "RECOMMENDATION",
       "tier": null,
       "scope": null
-    },
-    {
-      "file": "slab-operations-audit.md",
-      "displayName": "slab-operations-audit.md",
-      "topic": "Canonical Slab Allocator ADT operations audit. Inventories all public API surface and identifies gaps (capacity, get_mut, non-consuming iteration).",
-      "date": "2026-02-16",
-      "status": "RECOMMENDATION",
-      "statusDetail": null,
-      "statusRaw": "RECOMMENDATION",
-      "tier": null,
-      "scope": null
     }
   ]
 }
