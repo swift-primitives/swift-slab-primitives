@@ -11,6 +11,7 @@
 
 import Bit_Primitives
 public import Buffer_Slab_Inline_Primitives
+public import Finite_Bounded_Primitives
 import Index_Primitives
 public import Slab_Static_Primitive
 

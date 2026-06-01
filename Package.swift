@@ -66,6 +66,7 @@ let package = Package(
                 "Slab Static Primitive",
                 .product(name: "Bit Primitives", package: "swift-bit-primitives"),
                 .product(name: "Buffer Slab Inline Primitives", package: "swift-buffer-slab-primitives"),
+                .product(name: "Finite Bounded Primitives", package: "swift-finite-primitives"),
                 .product(name: "Index Primitives", package: "swift-index-primitives"),
                 .product(name: "Property Primitives", package: "swift-property-primitives"),
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),

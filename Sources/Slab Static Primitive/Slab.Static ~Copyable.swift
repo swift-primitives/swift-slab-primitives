@@ -11,7 +11,7 @@
 
 import Bit_Primitives
 import Buffer_Slab_Inline_Primitives
-import Finite_Primitives
+public import Finite_Primitives
 import Index_Primitives
 import Slab_Primitive
 
