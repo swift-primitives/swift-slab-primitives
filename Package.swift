@@ -35,7 +35,7 @@ let package = Package(
     ],
     targets: [
 
-        // MARK: - Base type (Slab heap + Slab.Error + Slab.Indexed phantom-tag wrapper)
+        // MARK: - Base type (Slab heap + Slab.Error)
         .target(
             name: "Slab Primitive",
             dependencies: [

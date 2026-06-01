@@ -11,7 +11,7 @@
 
 // exports.swift
 // Re-exports for Slab Primitive (the base heap-backed slab type module).
-// Declares Slab (heap), Slab.Error, and Slab.Indexed (phantom-typed wrapper);
+// Declares Slab (heap) and Slab.Error;
 // re-exports the slab storage + index domains the base type composes.
 
 @_exported public import Buffer_Slab_Primitives
