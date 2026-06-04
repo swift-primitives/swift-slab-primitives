@@ -26,12 +26,12 @@ extension Slab where Element: ~Copyable {
     /// No workarounds needed at this layer.
     public struct Static<let wordCount: Int>: ~Copyable {
         @usableFromInline
-        package var _buffer: Buffer<Element>.Slab.Inline<wordCount>
+        package var _buffer: Buffer<Storage<Element>.Heap>.Slab.Inline<wordCount>
 
         /// Creates an empty static slab.
         @inlinable
         public init() {
-            self._buffer = Buffer<Element>.Slab.Inline()
+            self._buffer = Buffer<Storage<Element>.Heap>.Slab.Inline()
         }
     }
 }

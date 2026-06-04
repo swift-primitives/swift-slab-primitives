@@ -31,12 +31,12 @@ public import Index_Primitives
 @safe
 public struct Slab<Element: ~Copyable>: ~Copyable {
     @usableFromInline
-    package var _buffer: Buffer<Element>.Slab.Bounded
+    package var _buffer: Buffer<Storage<Element>.Heap>.Slab.Bounded
 
     /// Creates an empty slab with no allocation.
     @inlinable
     public init() {
-        self._buffer = Buffer<Element>.Slab.Bounded(
+        self._buffer = Buffer<Storage<Element>.Heap>.Slab.Bounded(
             minimumCapacity: .zero
         )
     }
@@ -44,7 +44,7 @@ public struct Slab<Element: ~Copyable>: ~Copyable {
     /// Creates a slab with the specified minimum capacity.
     @inlinable
     public init(minimumCapacity: Index<Element>.Count) {
-        self._buffer = Buffer<Element>.Slab.Bounded(
+        self._buffer = Buffer<Storage<Element>.Heap>.Slab.Bounded(
             minimumCapacity: minimumCapacity
         )
     }
