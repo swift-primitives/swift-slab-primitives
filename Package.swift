@@ -32,6 +32,10 @@ let package = Package(
         .package(url: "https://github.com/swift-primitives/swift-sequence-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-buffer-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-buffer-slab-primitives.git", branch: "main"),
+        // E2 (storage-small-substrate.md): verbose truth form Storage<E>.Contiguous<Memory.Heap<E>>
+        // needs direct deps (MemberImportVisibility) on the declaring modules.
+        .package(url: "https://github.com/swift-primitives/swift-storage-primitives.git", branch: "main"),
+        .package(url: "https://github.com/swift-primitives/swift-memory-heap-primitives.git", branch: "main"),
     ],
     targets: [
 
@@ -44,6 +48,8 @@ let package = Package(
                 .product(name: "Index Primitives", package: "swift-index-primitives"),
                 .product(name: "Property Primitives", package: "swift-property-primitives"),
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
+                .product(name: "Storage Contiguous Primitives", package: "swift-storage-primitives"),
+                .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
             ]
         ),
 
@@ -56,6 +62,8 @@ let package = Package(
                 .product(name: "Buffer Slab Inline Primitives", package: "swift-buffer-slab-primitives"),
                 .product(name: "Finite Primitives", package: "swift-finite-primitives"),
                 .product(name: "Index Primitives", package: "swift-index-primitives"),
+                .product(name: "Storage Contiguous Primitives", package: "swift-storage-primitives"),
+                .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
             ]
         ),
 

@@ -11,6 +11,8 @@
 
 public import Slab_Primitive
 public import Buffer_Slab_Inline_Primitives
+public import Memory_Heap_Primitives
+public import Storage_Contiguous_Primitives
 
 extension Slab where Element: ~Copyable {
 
@@ -26,12 +28,12 @@ extension Slab where Element: ~Copyable {
     /// No workarounds needed at this layer.
     public struct Static<let wordCount: Int>: ~Copyable {
         @usableFromInline
-        package var _buffer: Buffer<Storage<Element>.Heap>.Slab.Inline<wordCount>
+        package var _buffer: Buffer<Storage<Element>.Contiguous<Memory.Heap<Element>>>.Slab.Inline<wordCount>
 
         /// Creates an empty static slab.
         @inlinable
         public init() {
-            self._buffer = Buffer<Storage<Element>.Heap>.Slab.Inline()
+            self._buffer = Buffer<Storage<Element>.Contiguous<Memory.Heap<Element>>>.Slab.Inline()
         }
     }
 }
