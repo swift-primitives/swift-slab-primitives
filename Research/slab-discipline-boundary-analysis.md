@@ -17,7 +17,7 @@ The Swift Institute primitives architecture establishes a strict four-layer depe
 Memory (Tier 13) → Storage (Tier 14) → Buffer (Tier 15) → Data Structure (Tier 16+)
 ```
 
-`slab-primitives` sits at the top of this chain, wrapping `Buffer<Element>.Slab.Bounded` (heap-backed) and `Buffer<Element>.Slab.Inline<wordCount>` (stack-allocated) to present a consumer-facing slab abstraction. The question: does `slab-primitives` contain ONLY slab-discipline semantics, or has buffer-level concern leaked upward?
+`slab-primitives` sits at the top of this chain, wrapping `Buffer<Storage<Element>.Heap>.Slab.Bounded` (heap-backed) and `Buffer<Storage<Element>.Heap>.Slab.Inline<wordCount>` (stack-allocated) to present a consumer-facing slab abstraction. The question: does `slab-primitives` contain ONLY slab-discipline semantics, or has buffer-level concern leaked upward?
 
 **Trigger**: [RES-012] Discovery — proactive design audit to verify layering discipline.
 
@@ -260,9 +260,9 @@ The retag chain is: `Index<Tag>` -> `Index<Element>` -> `Bit.Index` — two zero
 
 | Variant | What it provides | Why not in Buffer |
 |---------|-----------------|-------------------|
-| `Slab<Element>` | Consumer-facing name for heap-backed fixed-capacity slab | Buffer has `Buffer<Element>.Slab.Bounded` — infrastructure name |
-| `Slab<Element>.Static<let wordCount: Int>` | Consumer-facing name for inline slab | Buffer has `Buffer<Element>.Slab.Inline<wordCount>` — infrastructure name |
-| `Slab<Element>.Indexed<Tag>` | Consumer-facing phantom-typed wrapper | Buffer has `Buffer<Element>.Slab.Bounded.Indexed<Tag>` — infrastructure name |
+| `Slab<Element>` | Consumer-facing name for heap-backed fixed-capacity slab | Buffer has `Buffer<Storage<Element>.Heap>.Slab.Bounded` — infrastructure name |
+| `Slab<Element>.Static<let wordCount: Int>` | Consumer-facing name for inline slab | Buffer has `Buffer<Storage<Element>.Heap>.Slab.Inline<wordCount>` — infrastructure name |
+| `Slab<Element>.Indexed<Tag>` | Consumer-facing phantom-typed wrapper | Buffer has `Buffer<Storage<Element>.Heap>.Slab.Bounded.Indexed<Tag>` — infrastructure name |
 | `Slab<Element>.Error` | Domain-specific error type | Buffer has no error type |
 
 The data structure layer provides the **namespace that consumers import**. `import Slab_Primitives` gives you `Slab`, `Slab.Static`, `Slab.Indexed`. The buffer layer's `Buffer.Slab.Bounded.Indexed<Tag>` is infrastructure — it should not appear in consumer code.
@@ -328,11 +328,11 @@ For each file in `slab-primitives/Sources/`, classify every public API member as
 | Item | Classification | Rationale |
 |------|---------------|-----------|
 | `struct Slab<Element: ~Copyable>: ~Copyable` | **SLAB** | Consumer-facing type identity and namespace |
-| `package var _buffer: Buffer<Element>.Slab.Bounded` | **SLAB** | Encapsulation — buffer is internal, not exposed |
+| `package var _buffer: Buffer<Storage<Element>.Heap>.Slab.Bounded` | **SLAB** | Encapsulation — buffer is internal, not exposed |
 | `init()` | **DELEGATE** | Delegates to `Buffer.Slab.Bounded(minimumCapacity: .zero)` |
 | `init(minimumCapacity: Index<Element>.Count)` | **DELEGATE** | Delegates to `Buffer.Slab.Bounded(minimumCapacity:)` |
 | `struct Static<let wordCount: Int>: ~Copyable` | **SLAB** | Variant taxonomy — consumer name for inline slab |
-| `Static._buffer: Buffer<Element>.Slab.Inline<wordCount>` | **SLAB** | Encapsulation |
+| `Static._buffer: Buffer<Storage<Element>.Heap>.Slab.Inline<wordCount>` | **SLAB** | Encapsulation |
 | `Static.init()` | **DELEGATE** | Delegates to `Buffer.Slab.Inline()` |
 | `struct Indexed<Tag: ~Copyable>: ~Copyable` | **SLAB** | Phantom-typed wrapper — type-safe access |
 | `Indexed._base: Slab<Element>` | **SLAB** | Wraps base slab, not buffer directly |
@@ -462,7 +462,7 @@ Note: `Slab.Indexed` delegates to `Slab` (not directly to buffer). This is the c
 
 | Item | Issue | Assessment |
 |------|-------|------------|
-| `@_exported public import Buffer_Slab_Primitives` in Core exports | Re-exports the entire buffer slab module to consumers. This means consumers can access `Buffer<Element>.Slab.Bounded`, `Buffer.Slab.Header`, etc. directly. | **CONTESTED** — This is the standard pattern in other primitives packages (array-primitives also re-exports Buffer_Linear_Primitives). The buffer types are infrastructure, but they are needed for advanced use cases and the `_buffer` stored property is `package`-scoped, not `public`. The re-export does not constitute a layering violation; it ensures that consumers who need lower-level access do not need a separate import. However, it means the buffer API surface is technically reachable from `import Slab_Primitives`. This is acceptable given the monorepo structure where buffer and slab are in the same primitives ecosystem. |
+| `@_exported public import Buffer_Slab_Primitives` in Core exports | Re-exports the entire buffer slab module to consumers. This means consumers can access `Buffer<Storage<Element>.Heap>.Slab.Bounded`, `Buffer.Slab.Header`, etc. directly. | **CONTESTED** — This is the standard pattern in other primitives packages (array-primitives also re-exports Buffer_Linear_Primitives). The buffer types are infrastructure, but they are needed for advanced use cases and the `_buffer` stored property is `package`-scoped, not `public`. The re-export does not constitute a layering violation; it ensures that consumers who need lower-level access do not need a separate import. However, it means the buffer API surface is technically reachable from `import Slab_Primitives`. This is acceptable given the monorepo structure where buffer and slab are in the same primitives ecosystem. |
 | `Slab` wraps `Buffer.Slab.Bounded` but is documented as growable | The existing research document recommends `Slab` should wrap `Buffer.Slab` (growable), but the current implementation wraps `Buffer.Slab.Bounded` (fixed-capacity). | **OBSERVATION** — This is a known design decision from the prior research. The current implementation is the bounded (non-growable) variant. Growth semantics are deferred. No layering violation — just a noted future evolution. |
 | `Sequence.Drain.Protocol` conformance exists at BOTH buffer and slab levels | `Buffer.Slab.Bounded: Sequence.Drain.Protocol` AND `Slab: Sequence.Drain.Protocol`. The slab's `drain(_:)` method simply calls `_buffer.drain(body)`. | **MINOR** — Both conformances are valid. The buffer needs drain for its own type. The slab needs drain for its own type. The slab's conformance is a thin wrapper providing type identity at the data structure level. The `drain` *property* (via `Property.View`) is solely slab discipline — it is the ergonomic accessor. |
 | `peek` in Slab returns `Element?` while buffer's `peek` returns `Element` | Slab adds an occupancy guard and returns Optional; buffer requires the caller to ensure occupancy via precondition. | **SLAB** — This is a clear slab-discipline decision: safe access with Optional return. The occupancy awareness is the slab's contribution. |

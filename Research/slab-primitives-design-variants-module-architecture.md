@@ -13,21 +13,21 @@ normative: false
 
 ## Context
 
-`swift-slab-primitives` currently provides a monolithic `Slab<Element>` type — a thin wrapper around `Buffer<Element>.Slab.Bounded` in a single module. This is the only data structure package in swift-primitives that has **not** undergone the module split for `~Copyable` support, and it lacks the variant types (Static, Indexed) that all other data structure packages provide.
+`swift-slab-primitives` currently provides a monolithic `Slab<Element>` type — a thin wrapper around `Buffer<Storage<Element>.Heap>.Slab.Bounded` in a single module. This is the only data structure package in swift-primitives that has **not** undergone the module split for `~Copyable` support, and it lacks the variant types (Static, Indexed) that all other data structure packages provide.
 
 The buffer layer already provides three slab variants:
 
 | Buffer Type | Storage | Capacity | Growable |
 |-------------|---------|----------|:---:|
-| `Buffer<Element>.Slab` | Heap (`Storage.Heap`) | Runtime | Yes |
-| `Buffer<Element>.Slab.Bounded` | Heap (`Storage.Heap`) | Runtime (fixed at init) | No |
-| `Buffer<Element>.Slab.Inline<let wordCount: Int>` | Stack (`Storage.Inline`) | Compile-time | No |
+| `Buffer<Storage<Element>.Heap>.Slab` | Heap (`Storage.Heap`) | Runtime | Yes |
+| `Buffer<Storage<Element>.Heap>.Slab.Bounded` | Heap (`Storage.Heap`) | Runtime (fixed at init) | No |
+| `Buffer<Storage<Element>.Heap>.Slab.Inline<let wordCount: Int>` | Stack (`Storage.Inline`) | Compile-time | No |
 
 Plus a phantom-typed wrapper:
 
 | Buffer Type | Purpose |
 |-------------|---------|
-| `Buffer<Element>.Slab.Bounded.Indexed<Tag>` | Zero-cost `Index<Tag>` instead of `Bit.Index` |
+| `Buffer<Storage<Element>.Heap>.Slab.Bounded.Indexed<Tag>` | Zero-cost `Index<Tag>` instead of `Bit.Index` |
 
 The data structure layer currently exposes only one of these (Bounded), with no module split and no variant types. Every other comparable data structure package (Array, Stack, Queue, Heap) has both a module split and 3-5 variant types.
 
@@ -178,16 +178,16 @@ swift-collection-primitives      ← imported but not used (Sequence commented o
 swift-buffer-primitives          ← Buffer Slab Primitives
 ```
 
-### Backing Buffer: `Buffer<Element>.Slab.Bounded`
+### Backing Buffer: `Buffer<Storage<Element>.Heap>.Slab.Bounded`
 
-The current `Slab<Element>` wraps `Buffer<Element>.Slab.Bounded`, which is the **fixed-capacity, heap-backed** buffer variant. This means:
+The current `Slab<Element>` wraps `Buffer<Storage<Element>.Heap>.Slab.Bounded`, which is the **fixed-capacity, heap-backed** buffer variant. This means:
 
 - Capacity determined at runtime (`init(minimumCapacity:)`).
 - No growth after initialization.
 - Heap storage via `Storage<Element>.Heap`.
 - Bitmap occupancy via `Slab.Header` (wraps `Bit.Vector`).
 
-The growable `Buffer<Element>.Slab` and inline `Buffer<Element>.Slab.Inline<wordCount>` are **not exposed** at the data structure layer.
+The growable `Buffer<Storage<Element>.Heap>.Slab` and inline `Buffer<Storage<Element>.Heap>.Slab.Inline<wordCount>` are **not exposed** at the data structure layer.
 
 ---
 
