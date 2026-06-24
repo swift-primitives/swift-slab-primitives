@@ -12,6 +12,7 @@
 public import Buffer_Slab_Primitives
 public import Index_Primitives
 public import Memory_Heap_Primitives
+public import Memory_Allocator_Primitive
 public import Storage_Contiguous_Primitives
 
 /// A fixed-capacity, heap-backed typed slot storage with bitmap occupancy tracking.
@@ -33,12 +34,12 @@ public import Storage_Contiguous_Primitives
 @safe
 public struct Slab<Element: ~Copyable>: ~Copyable {
     @usableFromInline
-    package var _buffer: Buffer<Storage<Element>.Contiguous<Memory.Heap<Element>>>.Slab.Bounded
+    package var _buffer: Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>>.Slab.Bounded
 
     /// Creates an empty slab with no allocation.
     @inlinable
     public init() {
-        self._buffer = Buffer<Storage<Element>.Contiguous<Memory.Heap<Element>>>.Slab.Bounded(
+        self._buffer = Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>>.Slab.Bounded(
             minimumCapacity: .zero
         )
     }
@@ -46,7 +47,7 @@ public struct Slab<Element: ~Copyable>: ~Copyable {
     /// Creates a slab with the specified minimum capacity.
     @inlinable
     public init(minimumCapacity: Index<Element>.Count) {
-        self._buffer = Buffer<Storage<Element>.Contiguous<Memory.Heap<Element>>>.Slab.Bounded(
+        self._buffer = Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<Element>>.Slab.Bounded(
             minimumCapacity: minimumCapacity
         )
     }

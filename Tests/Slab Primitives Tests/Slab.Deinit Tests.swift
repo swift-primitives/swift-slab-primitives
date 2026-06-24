@@ -13,7 +13,18 @@ import Testing
 
 @testable import Slab_Primitives
 
-@Suite("Slab - Deinit")
+// RELEASE-GUARD (swift-institute/Issues/swift-issue-inlinearray-class-field-write-elision):
+// `Slab.Static` is backed by `Buffer.Slab.Inline`, whose occupancy-bitmap writes are elided
+// under `-O` (the inline-arm release miscompile). These Static-deinit tests run in DEBUG and
+// SKIP under `-O`, pending the occupancy-placement ruling (HANDOFF-sparse-occupancy-placement.md).
+// (Base heap `Slab` is release-correct and covered by the "Slab" suite.)
+@Suite(
+    "Slab - Deinit",
+    .disabled(
+        if: !_isDebugAssertConfiguration(),
+        "release-blocked: swift-issue-inlinearray-class-field-write-elision (Slab.Static inline arm); pending HANDOFF-sparse-occupancy-placement.md"
+    )
+)
 struct SlabDeinitTests {
 
     final class Tracker: @unchecked Sendable {
