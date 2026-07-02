@@ -15,6 +15,9 @@ public import Memory_Heap_Primitives
 public import Memory_Allocator_Primitive
 public import Storage_Contiguous_Primitives
 
+// WHY: Category D — structural Sendable workaround; the type is
+// WHY: structurally value-safe but the compiler cannot synthesize
+// WHY: Sendable due to a stored pointer / generic parameter shape.
 /// A fixed-capacity, heap-backed typed slot storage with bitmap occupancy tracking.
 ///
 /// `Slab` provides O(1) insert and remove at consumer-chosen indices,
@@ -28,9 +31,6 @@ public import Storage_Contiguous_Primitives
 /// - ``Slab``: Heap-backed, fixed-capacity slot storage (this type)
 /// - ``Slab/Static``: Zero-allocation inline storage with compile-time capacity
 /// - ``Slab/Indexed``: Phantom-typed index wrapper over ``Slab``
-// WHY: Category D — structural Sendable workaround; the type is
-// WHY: structurally value-safe but the compiler cannot synthesize
-// WHY: Sendable due to a stored pointer / generic parameter shape.
 @safe
 public struct Slab<Element: ~Copyable>: ~Copyable {
     @usableFromInline

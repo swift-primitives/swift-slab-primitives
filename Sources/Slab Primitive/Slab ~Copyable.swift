@@ -56,7 +56,7 @@ extension Slab where Element: ~Copyable {
     public mutating func insert(
         _ element: consuming Element,
         at index: Index<Element>
-    ) throws(Slab.Error) {
+    ) throws(Error) {
         let slot = index.retag(Bit.self)
         guard !_buffer.isOccupied(at: slot) else {
             throw .occupied
@@ -81,7 +81,7 @@ extension Slab where Element: ~Copyable {
     @inlinable
     public mutating func remove(
         at index: Index<Element>
-    ) throws(Slab.Error) -> Element {
+    ) throws(Error) -> Element {
         let slot = index.retag(Bit.self)
         guard _buffer.isOccupied(at: slot) else {
             throw .vacant
@@ -112,7 +112,7 @@ extension Slab where Element: ~Copyable {
     @inlinable
     public mutating func insert(
         _ element: consuming Element
-    ) throws(Slab.Error) -> Index<Element> {
+    ) throws(Error) -> Index<Element> {
         guard let slot = firstVacant() else {
             throw .full
         }
@@ -131,7 +131,7 @@ extension Slab where Element: ~Copyable {
     public mutating func update(
         at index: Index<Element>,
         with element: consuming Element
-    ) throws(Slab.Error) -> Element {
+    ) throws(Error) -> Element {
         let slot = index.retag(Bit.self)
         guard _buffer.isOccupied(at: slot) else {
             throw .vacant
