@@ -1,6 +1,6 @@
 # .github/metadata.yaml
 # Triaged by AI-assisted bulk pass (2026-04-29).
-description: "Slab types for Swift."
+description: "Fixed-capacity, heap-backed slot storage with O(1) bitmap-tracked insert and remove at consumer-chosen indices for Swift."
 topics:
   - primitives
   - slab
