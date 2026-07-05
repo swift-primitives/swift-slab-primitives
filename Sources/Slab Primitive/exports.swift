@@ -10,9 +10,15 @@
 // ===----------------------------------------------------------------------===//
 
 // exports.swift
-// Re-exports for Slab Primitive (the base heap-backed slab type module).
-// Declares Slab (heap) and Slab.Error;
-// re-exports the slab storage + index domains the base type composes.
+// Re-exports for Slab Primitive — the ADT-tower carrier module.
+// Declares the bound-free carrier `__Slab<S: ~Copyable>` (Slab.swift) + the canonical
+// front-door alias `Slab<E>` (Slab.FrontDoor.swift, [DS-028]) + `Slab.Error`;
+// re-exports the `Buffer.Protocol` seam + the default Slab-buffer / heap column
+// vocabulary the front door and the column-pinned ops compose.
 
+@_exported public import Buffer_Protocol_Primitives
 @_exported public import Buffer_Slab_Primitives
+@_exported public import Storage_Contiguous_Primitives
+@_exported public import Memory_Heap_Primitives
+@_exported public import Memory_Allocator_Primitive
 @_exported public import Index_Primitives

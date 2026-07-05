@@ -12,22 +12,22 @@ let package = Package(
         .visionOS(.v26)
     ],
     products: [
-        // MARK: - Base
+        // MARK: - Base (ADT-tower W2 shape: carrier `__Slab<S>` + front door `Slab<E>`)
         .library(name: "Slab Primitive", targets: ["Slab Primitive"]),
         .library(name: "Slab Primitives", targets: ["Slab Primitives"]),
 
-        // MARK: - Static variant
-        .library(name: "Slab Static Primitive", targets: ["Slab Static Primitive"]),
-        .library(name: "Slab Static Primitives", targets: ["Slab Static Primitives"]),
-
         // MARK: - Test Support
         .library(name: "Slab Primitives Test Support", targets: ["Slab Primitives Test Support"]),
+
+        // NOTE (ADT-tower W2, 2026-07-05): the `Slab.Static` inline variant targets are
+        // PARKED under "Experiments/Slab Static (parked)/" (retained in-tree, out of the
+        // build graph — see that directory's README.md). It re-homes at W3 as the
+        // `Slab<E>.Inline<n>` front door (§9.3 W3 row, adt-tower.md:1376).
     ],
     dependencies: [
         .package(url: "https://github.com/swift-primitives/swift-index-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-finite-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-bit-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-property-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-collection-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-sequence-primitives.git", branch: "main"),
         .package(url: "https://github.com/swift-primitives/swift-buffer-primitives.git", branch: "main"),
@@ -40,62 +40,34 @@ let package = Package(
     ],
     targets: [
 
-        // MARK: - Base type (Slab heap + Slab.Error)
+        // MARK: - Carrier + front door (the ADT-tower W2 core: `__Slab<S>` + `Slab<E>` + Slab.Error)
         .target(
             name: "Slab Primitive",
             dependencies: [
+                // Seam (D3): the generic observability surface the seam-generic ops ride.
+                .product(name: "Buffer Protocol Primitives", package: "swift-buffer-primitives"),
+                // Column vocabulary: the default Slab-buffer / heap column.
                 .product(name: "Bit Primitives", package: "swift-bit-primitives"),
                 .product(name: "Buffer Slab Primitives", package: "swift-buffer-slab-primitives"),
                 .product(name: "Index Primitives", package: "swift-index-primitives"),
-                .product(name: "Property Primitives", package: "swift-property-primitives"),
-                .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
                 .product(name: "Storage Contiguous Primitives", package: "swift-storage-primitives"),
                 .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
                 .product(name: "Memory Allocator Primitive", package: "swift-memory-allocation-primitives"),
             ]
         ),
 
-        // MARK: - Static type
-        .target(
-            name: "Slab Static Primitive",
-            dependencies: [
-                "Slab Primitive",
-                .product(name: "Bit Primitives", package: "swift-bit-primitives"),
-                .product(name: "Buffer Slab Inline Primitives", package: "swift-buffer-slab-primitives"),
-                .product(name: "Finite Primitives", package: "swift-finite-primitives"),
-                .product(name: "Index Primitives", package: "swift-index-primitives"),
-                .product(name: "Storage Contiguous Primitives", package: "swift-storage-primitives"),
-                .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
-                .product(name: "Memory Allocator Primitive", package: "swift-memory-allocation-primitives"),
-            ]
-        ),
-
-        // MARK: - Static ops
-        .target(
-            name: "Slab Static Primitives",
-            dependencies: [
-                "Slab Static Primitive",
-                .product(name: "Bit Primitives", package: "swift-bit-primitives"),
-                .product(name: "Buffer Slab Inline Primitives", package: "swift-buffer-slab-primitives"),
-                .product(name: "Finite Bounded Primitives", package: "swift-finite-primitives"),
-                .product(name: "Index Primitives", package: "swift-index-primitives"),
-                .product(name: "Property Primitives", package: "swift-property-primitives"),
-                .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
-            ]
-        ),
-
-        // MARK: - Base ops + Umbrella ([MOD-005] dual-role: base conformances + re-export of all variants)
+        // MARK: - Umbrella ([MOD-005]): carrier module + the `peek` non-destructive read.
         .target(
             name: "Slab Primitives",
             dependencies: [
                 "Slab Primitive",
-                "Slab Static Primitive",
-                "Slab Static Primitives",
                 .product(name: "Bit Primitives", package: "swift-bit-primitives"),
                 .product(name: "Buffer Slab Primitives", package: "swift-buffer-slab-primitives"),
                 .product(name: "Index Primitives", package: "swift-index-primitives"),
-                .product(name: "Property Primitives", package: "swift-property-primitives"),
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
+                .product(name: "Storage Contiguous Primitives", package: "swift-storage-primitives"),
+                .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
+                .product(name: "Memory Allocator Primitive", package: "swift-memory-allocation-primitives"),
             ]
         ),
 
@@ -105,6 +77,7 @@ let package = Package(
             dependencies: [
                 "Slab Primitives",
                 .product(name: "Buffer Primitives Test Support", package: "swift-buffer-primitives"),
+                .product(name: "Index Primitives Test Support", package: "swift-index-primitives"),
             ]
         ),
 

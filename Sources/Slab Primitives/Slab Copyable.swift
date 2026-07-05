@@ -10,18 +10,27 @@
 // ===----------------------------------------------------------------------===//
 
 import Bit_Primitives
-import Buffer_Slab_Primitives
-import Index_Primitives
+public import Buffer_Slab_Primitives
+public import Index_Primitives
+public import Memory_Allocator_Primitive
+public import Memory_Heap_Primitives
 public import Slab_Primitive
+public import Storage_Contiguous_Primitives
 
-// MARK: - Non-Destructive Read
+// MARK: - Non-Destructive Read (column-pinned; Copyable element)
 
-extension Slab where Element: Copyable {
-    /// Returns the element at the specified slot without removing it.
+extension __Slab where S: ~Copyable {
+    /// Returns the element at the specified slot without removing it, or `nil` if the
+    /// slot is vacant.
+    ///
+    /// A non-destructive read returns the element BY COPY, so it is available only for
+    /// `Copyable` elements (`E` here is implicitly `Copyable`); a `~Copyable` element
+    /// cannot be observed by copy — remove it, or use the mutating ops.
     @inlinable
-    public func peek(at index: Index<Element>) -> Element? {
+    public func peek<E>(at index: Index<E>) -> E?
+    where S == Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Slab.Bounded {
         let slot = index.retag(Bit.self)
-        guard _buffer.isOccupied(at: slot) else { return nil }
-        return _buffer.peek(at: slot)
+        guard column.isOccupied(at: slot) else { return nil }
+        return column.peek(at: slot)
     }
 }

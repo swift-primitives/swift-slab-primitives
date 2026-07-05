@@ -10,42 +10,101 @@
 // ===----------------------------------------------------------------------===//
 
 import Bit_Primitives
-import Buffer_Slab_Primitives
-import Index_Primitives
+public import Buffer_Protocol_Primitives
+public import Buffer_Slab_Primitives
+public import Index_Primitives
+public import Memory_Allocator_Primitive
+public import Memory_Heap_Primitives
+public import Storage_Contiguous_Primitives
 
-// MARK: - Occupancy Queries
+// ============================================================================
+// MARK: - Seam-generic observability (rides `Buffer.Protocol`)
+// ============================================================================
+//
+// The Slab column conforms `Buffer.Protocol` ONLY (it is a Buffer-tier discipline,
+// not a `Store.Protocol` storage column — unlike Heap's linear column, which
+// conforms both). So the seam-generic surface is exactly `Buffer.Protocol`'s
+// `count`/`isEmpty`; the sparse bitmap surface is column-pinned below ([DS-029]).
 
-extension Slab where Element: ~Copyable {
-    /// The number of currently occupied slots.
+extension __Slab where S: ~Copyable, S: Buffer.`Protocol` {
+    /// The number of currently occupied slots (the seam-generic count witness).
     @inlinable
-    public var occupancy: Index<Element>.Count {
-        _buffer.occupancy.retag(Element.self)
+    public var count: Index<S.Element>.Count { column.count }
+
+    /// The number of currently occupied slots (the slab-native vocabulary; equal to
+    /// ``count`` — a slab's native ledger IS its occupancy).
+    @inlinable
+    public var occupancy: Index<S.Element>.Count { column.count }
+
+    /// Whether no slots are occupied.
+    @inlinable
+    public var isEmpty: Bool { column.isEmpty }
+}
+
+// ============================================================================
+// MARK: - Construction (column-pinned; heap growth pin KEPT at W2, re-points at W3)
+// ============================================================================
+
+extension __Slab where S: ~Copyable {
+    /// Creates an empty slab with no allocation.
+    @inlinable
+    public init<E: ~Copyable>()
+    where S == Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Slab.Bounded {
+        self.init(
+            column: Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Slab.Bounded(
+                minimumCapacity: .zero
+            )
+        )
     }
 
-    /// Whether all slots are empty.
+    /// Creates a slab with the specified minimum capacity.
     @inlinable
-    public var isEmpty: Bool { _buffer.isEmpty }
+    public init<E: ~Copyable>(minimumCapacity: Index<E>.Count)
+    where S == Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Slab.Bounded {
+        self.init(
+            column: Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Slab.Bounded(
+                minimumCapacity: minimumCapacity
+            )
+        )
+    }
+}
 
+// ============================================================================
+// MARK: - Occupancy queries (column-pinned; the sparse bitmap surface)
+// ============================================================================
+
+extension __Slab where S: ~Copyable {
     /// Whether all slots are occupied.
+    ///
+    /// A column-pinned METHOD, not a property: fullness needs the column's capacity,
+    /// which is not on the `Buffer.Protocol` seam (the Slab column is Buffer-tier), so
+    /// it cannot ride the seam as a computed property ([DS-029] column-pinned form).
     @inlinable
-    public var isFull: Bool { _buffer.isFull }
+    public func isFull<E: ~Copyable>() -> Bool
+    where S == Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Slab.Bounded {
+        column.isFull
+    }
 
     /// Whether the slot at the given index is occupied.
     @inlinable
-    public func isOccupied(at index: Index<Element>) -> Bool {
-        _buffer.isOccupied(at: index.retag(Bit.self))
+    public func isOccupied<E: ~Copyable>(at index: Index<E>) -> Bool
+    where S == Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Slab.Bounded {
+        column.isOccupied(at: index.retag(Bit.self))
     }
 
     /// Returns the first vacant (unoccupied) slot index, or `nil` if full.
     @inlinable
-    public func firstVacant() -> Index<Element>? {
-        _buffer.firstVacant()?.retag(Element.self)
+    public func firstVacant<E: ~Copyable>() -> Index<E>?
+    where S == Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Slab.Bounded {
+        column.firstVacant()?.retag(E.self)
     }
 }
 
-// MARK: - Primitive Operations (Consumer-Chosen)
+// ============================================================================
+// MARK: - Primitive operations (consumer-chosen; column-pinned)
+// ============================================================================
 
-extension Slab where Element: ~Copyable {
+extension __Slab where S: ~Copyable {
     /// Inserts an element at the specified slot index.
     ///
     /// - Parameters:
@@ -53,24 +112,25 @@ extension Slab where Element: ~Copyable {
     ///   - index: The slot index. Must be vacant.
     /// - Throws: `Slab.Error.occupied` if the slot is already occupied.
     @inlinable
-    public mutating func insert(
-        _ element: consuming Element,
-        at index: Index<Element>
-    ) throws(Error) {
+    public mutating func insert<E: ~Copyable>(
+        _ element: consuming E,
+        at index: Index<E>
+    ) throws(Error)
+    where S == Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Slab.Bounded {
         let slot = index.retag(Bit.self)
-        guard !_buffer.isOccupied(at: slot) else {
+        guard !column.isOccupied(at: slot) else {
             throw .occupied
         }
-        _buffer.insert(consume element, at: slot)
+        column.insert(consume element, at: slot)
     }
 
     /// Inserts an element at the specified slot index without occupancy checking.
     @inlinable
-    public mutating func insert(
-        _ element: consuming Element,
-        __unchecked index: Index<Element>
-    ) {
-        _buffer.insert(consume element, at: index.retag(Bit.self))
+    public mutating func insert<E: ~Copyable>(
+        _ element: consuming E,
+        __unchecked index: Index<E>
+    ) where S == Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Slab.Bounded {
+        column.insert(consume element, at: index.retag(Bit.self))
     }
 
     /// Removes and returns the element at the specified slot index.
@@ -79,28 +139,31 @@ extension Slab where Element: ~Copyable {
     /// - Returns: The element that was stored at the index.
     /// - Throws: `Slab.Error.vacant` if the slot is not occupied.
     @inlinable
-    public mutating func remove(
-        at index: Index<Element>
-    ) throws(Error) -> Element {
+    public mutating func remove<E: ~Copyable>(
+        at index: Index<E>
+    ) throws(Error) -> E
+    where S == Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Slab.Bounded {
         let slot = index.retag(Bit.self)
-        guard _buffer.isOccupied(at: slot) else {
+        guard column.isOccupied(at: slot) else {
             throw .vacant
         }
-        return _buffer.remove(at: slot)
+        return column.remove(at: slot)
     }
 
     /// Removes and returns the element at the specified slot index without occupancy checking.
     @inlinable
-    public mutating func remove(
-        __unchecked index: Index<Element>
-    ) -> Element {
-        _buffer.remove(at: index.retag(Bit.self))
+    public mutating func remove<E: ~Copyable>(
+        __unchecked index: Index<E>
+    ) -> E where S == Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Slab.Bounded {
+        column.remove(at: index.retag(Bit.self))
     }
 }
 
-// MARK: - Composed Operations
+// ============================================================================
+// MARK: - Composed operations (column-pinned)
+// ============================================================================
 
-extension Slab where Element: ~Copyable {
+extension __Slab where S: ~Copyable {
     /// Inserts an element at the first vacant slot and returns the slot index.
     ///
     /// Composed from `firstVacant()` + `insert(_:at:)`.
@@ -110,13 +173,14 @@ extension Slab where Element: ~Copyable {
     /// - Throws: `Slab.Error.full` if no vacant slot exists.
     @discardableResult
     @inlinable
-    public mutating func insert(
-        _ element: consuming Element
-    ) throws(Error) -> Index<Element> {
-        guard let slot = firstVacant() else {
+    public mutating func insert<E: ~Copyable>(
+        _ element: consuming E
+    ) throws(Error) -> Index<E>
+    where S == Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Slab.Bounded {
+        guard let slot: Index<E> = firstVacant() else {
             throw .full
         }
-        _buffer.insert(consume element, at: slot.retag(Bit.self))
+        column.insert(consume element, at: slot.retag(Bit.self))
         return slot
     }
 
@@ -128,20 +192,22 @@ extension Slab where Element: ~Copyable {
     /// - Returns: The previous element.
     /// - Throws: `Slab.Error.vacant` if the slot is not occupied.
     @inlinable
-    public mutating func update(
-        at index: Index<Element>,
-        with element: consuming Element
-    ) throws(Error) -> Element {
+    public mutating func update<E: ~Copyable>(
+        at index: Index<E>,
+        with element: consuming E
+    ) throws(Error) -> E
+    where S == Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Slab.Bounded {
         let slot = index.retag(Bit.self)
-        guard _buffer.isOccupied(at: slot) else {
+        guard column.isOccupied(at: slot) else {
             throw .vacant
         }
-        return _buffer.update(at: slot, with: consume element)
+        return column.update(at: slot, with: consume element)
     }
 
     /// Removes all elements from the slab.
     @inlinable
-    public mutating func removeAll() {
-        _buffer.removeAll()
+    public mutating func removeAll<E: ~Copyable>()
+    where S == Buffer<Storage<Memory.Allocator<Memory.Heap>>.Contiguous<E>>.Slab.Bounded {
+        column.removeAll()
     }
 }

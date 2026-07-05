@@ -10,12 +10,14 @@
 // ===----------------------------------------------------------------------===//
 
 // exports.swift
-// Re-exports for Slab Primitives — the base-ops module that doubles as the
-// [MOD-005] umbrella. Users import Slab_Primitives and get the slab discipline:
-// the base Slab type + Copyable conformances (this module), plus the Static
-// storage variant. Per [MOD-005] the base-ops plural doubles as the package
-// umbrella.
+// The package umbrella ([MOD-005]): consumers import `Slab_Primitives` and get the
+// sparse stable-index slab ADT — the bound-free carrier `__Slab<S>` + the canonical
+// front door `Slab<E>` (the ADT-tower W2 shape) + the `peek` non-destructive read
+// (this module).
+//
+// The `Slab.Static` inline variant is PARKED (see "Experiments/Slab Static (parked)/")
+// as a future `Slab<E>.Inline<n>` front door for the W3 inline-front-door round
+// (§9.3 W3 row, adt-tower.md:1376) — retained in-tree, out of the build graph.
 
 @_exported public import Slab_Primitive
-@_exported public import Slab_Static_Primitives
 @_exported public import Sequence_Primitives
