@@ -9,10 +9,13 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Buffer_Primitives_Test_Support
 import Testing
 
 @testable import Slab_Primitives
+
+// Move-only discipline (playbook §5): the canonical `Slab<E>` is move-only, so a bare
+// `#expect(slab.method(…))` would capture `slab` (the `#expect` function-call check
+// requires the receiver `Copyable`). Every observation is bound to a local first.
 
 @Suite("Slab")
 struct SlabTests {
@@ -22,15 +25,19 @@ struct SlabTests {
     @Test
     func `init creates empty slab`() {
         let slab = Slab<Int>()
-        #expect(slab.isEmpty == true)
-        #expect(slab.occupancy == .zero)
+        let empty = slab.isEmpty
+        let occ = slab.occupancy
+        #expect(empty == true)
+        #expect(occ == .zero)
     }
 
     @Test
     func `init with minimum capacity`() {
         let slab = Slab<Int>(minimumCapacity: 10)
-        #expect(slab.isEmpty == true)
-        #expect(slab.occupancy == .zero)
+        let empty = slab.isEmpty
+        let occ = slab.occupancy
+        #expect(empty == true)
+        #expect(occ == .zero)
     }
 
     // MARK: - Insert and Remove
@@ -41,12 +48,15 @@ struct SlabTests {
         let index: Index<Int> = 0
         try slab.insert(42, at: index)
 
-        #expect(slab.isOccupied(at: index) == true)
-        #expect(slab.occupancy == 1)
+        let occupied = slab.isOccupied(at: index)
+        let occ = slab.occupancy
+        #expect(occupied == true)
+        #expect(occ == 1)
 
         let removed = try slab.remove(at: index)
+        let empty = slab.isEmpty
         #expect(removed == 42)
-        #expect(slab.isEmpty == true)
+        #expect(empty == true)
     }
 
     @Test
@@ -56,11 +66,16 @@ struct SlabTests {
         let i1 = try slab.insert(20)
         let i2 = try slab.insert(30)
 
-        #expect(slab.occupancy == 3)
-        #expect(try slab.remove(at: i0) == 10)
-        #expect(try slab.remove(at: i1) == 20)
-        #expect(try slab.remove(at: i2) == 30)
-        #expect(slab.isEmpty == true)
+        let occ = slab.occupancy
+        #expect(occ == 3)
+        let r0 = try slab.remove(at: i0)
+        let r1 = try slab.remove(at: i1)
+        let r2 = try slab.remove(at: i2)
+        #expect(r0 == 10)
+        #expect(r1 == 20)
+        #expect(r2 == 30)
+        let empty = slab.isEmpty
+        #expect(empty == true)
     }
 
     @Test
@@ -124,15 +139,18 @@ struct SlabTests {
         var slab = Slab<Int>(minimumCapacity: 1)
         let index = try slab.insert(42)
 
-        #expect(slab.peek(at: index) == 42)
-        #expect(slab.isOccupied(at: index) == true)
+        let peeked = slab.peek(at: index)
+        let occupied = slab.isOccupied(at: index)
+        #expect(peeked == 42)
+        #expect(occupied == true)
     }
 
     @Test
     func `peek vacant returns nil`() {
         let slab = Slab<Int>(minimumCapacity: 1)
         let index: Index<Int> = 0
-        #expect(slab.peek(at: index) == nil)
+        let peeked = slab.peek(at: index)
+        #expect(peeked == nil)
     }
 
     // MARK: - Occupancy Queries
@@ -154,11 +172,13 @@ struct SlabTests {
         var slab = Slab<Int>(minimumCapacity: 2)
         // minimumCapacity rounds up to word-aligned slot count,
         // so fill until actually full.
-        while !slab.isFull {
+        while !slab.isFull() {
             slab.insert(0, __unchecked: slab.firstVacant()!)
         }
-        #expect(slab.isFull == true)
-        #expect(slab.firstVacant() == nil)
+        let full = slab.isFull()
+        let vacant = slab.firstVacant()
+        #expect(full == true)
+        #expect(vacant == nil)
     }
 
     // MARK: - Slot Reuse
@@ -169,7 +189,8 @@ struct SlabTests {
         let slot = try slab.insert(10)
         _ = try slab.remove(at: slot)
         try slab.insert(20, at: slot)
-        #expect(try slab.remove(at: slot) == 20)
+        let removed = try slab.remove(at: slot)
+        #expect(removed == 20)
     }
 
     // MARK: - Remove All
@@ -182,8 +203,10 @@ struct SlabTests {
         _ = try slab.insert(30)
 
         slab.removeAll()
-        #expect(slab.isEmpty == true)
-        #expect(slab.occupancy == .zero)
+        let empty = slab.isEmpty
+        let occ = slab.occupancy
+        #expect(empty == true)
+        #expect(occ == .zero)
     }
 
     // MARK: - Drain
@@ -197,7 +220,8 @@ struct SlabTests {
 
         var drained: [Int] = []
         slab.drain { drained.append($0) }
-        #expect(slab.isEmpty == true)
+        let empty = slab.isEmpty
+        #expect(empty == true)
         #expect(drained.sorted() == [10, 20, 30])
     }
 }
