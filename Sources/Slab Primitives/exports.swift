@@ -15,9 +15,10 @@
 // front door `Slab<E>` (the ADT-tower W2 shape) + the `peek` non-destructive read
 // (this module).
 //
-// The `Slab.Static` inline variant is PARKED (see "Experiments/Slab Static (parked)/")
-// as a future `Slab<E>.Inline<n>` front door for the W3 inline-front-door round
-// (§9.3 W3 row, adt-tower.md:1376) — retained in-tree, out of the build graph.
+// The inline (in-footprint, fixed-capacity) allocation variant is the `Slab<E>.Inline<n>`
+// front door — un-parked at W3 from the former `Slab.Static` (§9.3 W3 row, adt-tower.md:1376).
+// Per [DS-027].1 it lives in its OWN lean product (`Slab Inline Primitive`) and is NOT
+// re-exported here — inline-free consumers stay lean; consumers pull it explicitly.
 
 @_exported public import Slab_Primitive
 @_exported public import Sequence_Primitives

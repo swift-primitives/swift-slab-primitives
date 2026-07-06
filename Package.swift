@@ -16,13 +16,13 @@ let package = Package(
         .library(name: "Slab Primitive", targets: ["Slab Primitive"]),
         .library(name: "Slab Primitives", targets: ["Slab Primitives"]),
 
+        // MARK: - Inline variant ([DS-027].1: own product, NOT umbrella-re-exported —
+        // the W3 un-park of the parked `Slab.Static`, re-homed as `Slab<E>.Inline<n>`.
+        // Units: Inline<n> = ELEMENT/slot count.)
+        .library(name: "Slab Inline Primitive", targets: ["Slab Inline Primitive"]),
+
         // MARK: - Test Support
         .library(name: "Slab Primitives Test Support", targets: ["Slab Primitives Test Support"]),
-
-        // NOTE (ADT-tower W2, 2026-07-05): the `Slab.Static` inline variant targets are
-        // PARKED under "Experiments/Slab Static (parked)/" (retained in-tree, out of the
-        // build graph — see that directory's README.md). It re-homes at W3 as the
-        // `Slab<E>.Inline<n>` front door (§9.3 W3 row, adt-tower.md:1376).
     ],
     dependencies: [
         .package(url: "https://github.com/swift-primitives/swift-index-primitives.git", branch: "main"),
@@ -56,6 +56,24 @@ let package = Package(
             ]
         ),
 
+        // MARK: - Inline variant (the un-parked `Slab<E>.Inline<n>`: alias + inline-column
+        // op-pin set over the existing `Buffer.Slab.Inline` column). [DS-027].1: own lean
+        // target, NOT umbrella-re-exported — the Store.Inline leaf dep lands HERE only.
+        .target(
+            name: "Slab Inline Primitive",
+            dependencies: [
+                "Slab Primitive",
+                .product(name: "Buffer Primitive", package: "swift-buffer-primitives"),
+                .product(name: "Buffer Slab Inline Primitives", package: "swift-buffer-slab-primitives"),
+                .product(name: "Bit Primitives", package: "swift-bit-primitives"),
+                .product(name: "Finite Bounded Primitives", package: "swift-finite-primitives"),
+                .product(name: "Index Primitives", package: "swift-index-primitives"),
+                .product(name: "Storage Contiguous Primitives", package: "swift-storage-primitives"),
+                .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
+                .product(name: "Memory Allocator Primitive", package: "swift-memory-allocation-primitives"),
+            ]
+        ),
+
         // MARK: - Umbrella ([MOD-005]): carrier module + the `peek` non-destructive read.
         .target(
             name: "Slab Primitives",
@@ -76,6 +94,7 @@ let package = Package(
             name: "Slab Primitives Tests",
             dependencies: [
                 "Slab Primitives",
+                "Slab Inline Primitive",
                 .product(name: "Buffer Primitives Test Support", package: "swift-buffer-primitives"),
                 .product(name: "Index Primitives Test Support", package: "swift-index-primitives"),
             ]
