@@ -9,12 +9,11 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Testing
-
-import Slab_Primitives
-import Slab_Inline_Primitive
-import Index_Primitives
 import Finite_Bounded_Primitives
+import Index_Primitives
+import Slab_Inline_Primitive
+import Slab_Primitives
+import Testing
 
 // [DS-027].1 reachability for the un-parked `Slab<E>.Inline<n>` door: the alias resolves and the
 // inline-column op-pin set (construct / insert-at / remove-at / update / peek / firstVacant /

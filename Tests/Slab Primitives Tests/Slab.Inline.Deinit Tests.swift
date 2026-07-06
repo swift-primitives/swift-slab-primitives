@@ -9,10 +9,10 @@
 //
 // ===----------------------------------------------------------------------===//
 
+import Slab_Inline_Primitive
 import Testing
 
 @testable import Slab_Primitives
-import Slab_Inline_Primitive
 
 // Migrated from the parked `Slab.Static` deinit suite at the W3 un-park (the type is re-derived
 // as the `Slab<E>.Inline<n>` front-door alias, not resurrected).

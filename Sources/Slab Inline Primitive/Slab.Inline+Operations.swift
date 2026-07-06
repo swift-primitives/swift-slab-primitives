@@ -10,14 +10,14 @@
 // ===----------------------------------------------------------------------===//
 
 import Bit_Primitives
-public import Slab_Primitive
 public import Buffer_Primitive
 public import Buffer_Slab_Inline_Primitives
 public import Finite_Bounded_Primitives
 public import Index_Primitives
-public import Storage_Contiguous_Primitives
-public import Memory_Heap_Primitives
 public import Memory_Allocator_Primitive
+public import Memory_Heap_Primitives
+public import Slab_Primitive
+public import Storage_Contiguous_Primitives
 
 // The inline-column op set for `__Slab` — the second column-pinned op set the tower calls for
 // (D4.3 / [DS-029]: the sparse bitmap surface is column-specific, not seam vocabulary, so each

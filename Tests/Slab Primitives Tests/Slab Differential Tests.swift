@@ -46,7 +46,7 @@ struct SlabDifferentialTests {
     @Test("600 mixed ops: duplicates, interleaved insert/remove/update/peek, slot reuse")
     func differentialAgainstIndexOracle() throws {
         var rng = SplitMix64(seed: 0x5EED_5148_ABCD_0001)
-        var slab = Slab<Int>(minimumCapacity: 64)   // fixed capacity -> fill/drain cycling
+        var slab = Slab<Int>(minimumCapacity: 64)  // fixed capacity -> fill/drain cycling
 
         // The oracle: the exact set of live (index, value) pairs. Trivially correct.
         var live: [(index: Index<Int>, value: Int)] = []
@@ -131,6 +131,6 @@ struct SlabDifferentialTests {
         #expect(inserts >= 200)
         #expect(removes >= 60)
         #expect(updates >= 30)
-        #expect(fullHits >= 1)          // fill/drain cycling reached a full slab
+        #expect(fullHits >= 1)  // fill/drain cycling reached a full slab
     }
 }

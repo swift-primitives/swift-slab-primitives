@@ -55,13 +55,15 @@
 /// Copyability flows from the column: `__Slab<S>` is `Copyable` exactly when `S` is
 /// (the default Slab-buffer column is move-only by design — it owns a bitmap-driven
 /// teardown box).
-@_documentation(visibility: public)   // symbolgraph-extract drops __-prefixed decls otherwise
+@_documentation(visibility: public)  // symbolgraph-extract drops __-prefixed decls otherwise
 @frozen
 public struct __Slab<S: ~Copyable>: ~Copyable {
 
     /// The storage column — the default move-only Slab buffer (bitmap occupancy +
-    /// relocated cleanup oracle). The ADT is a thin semantic discipline over it; it
-    /// carries NO deinit (teardown lives in the column's box).
+    /// relocated cleanup oracle).
+    ///
+    /// The ADT is a thin semantic discipline over it; it carries NO deinit
+    /// (teardown lives in the column's box).
     @usableFromInline
     package var column: S
 

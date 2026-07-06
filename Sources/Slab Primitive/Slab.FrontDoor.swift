@@ -10,9 +10,9 @@
 // ===----------------------------------------------------------------------===//
 
 public import Buffer_Slab_Primitives
-public import Storage_Contiguous_Primitives
-public import Memory_Heap_Primitives
 public import Memory_Allocator_Primitive
+public import Memory_Heap_Primitives
+public import Storage_Contiguous_Primitives
 
 // MARK: - Slab<E> — the CANONICAL front door ([DS-028])
 

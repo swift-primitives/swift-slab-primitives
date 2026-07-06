@@ -20,5 +20,5 @@
 // Per [DS-027].1 it lives in its OWN lean product (`Slab Inline Primitive`) and is NOT
 // re-exported here — inline-free consumers stay lean; consumers pull it explicitly.
 
-@_exported public import Slab_Primitive
 @_exported public import Sequence_Primitives
+@_exported public import Slab_Primitive

@@ -9,13 +9,13 @@
 //
 // ===----------------------------------------------------------------------===//
 
-public import Slab_Primitive
 public import Buffer_Primitive
-public import Buffer_Slab_Inline_Primitives
 public import Buffer_Protocol_Primitives
-public import Storage_Contiguous_Primitives
-public import Memory_Heap_Primitives
+public import Buffer_Slab_Inline_Primitives
 public import Memory_Allocator_Primitive
+public import Memory_Heap_Primitives
+public import Slab_Primitive
+public import Storage_Contiguous_Primitives
 
 // MARK: - Slab<E>.Inline<n> — the inline (in-footprint) allocation variant ([DS-028] law 1)
 //
