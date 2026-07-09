@@ -31,6 +31,9 @@ import Testing
 private struct SplitMix64: RandomNumberGenerator {
     var state: UInt64
     init(seed: UInt64) { self.state = seed }
+}
+
+extension SplitMix64 {
     mutating func next() -> UInt64 {
         state = state &+ 0x9E37_79B9_7F4A_7C15
         var z = state
@@ -43,8 +46,8 @@ private struct SplitMix64: RandomNumberGenerator {
 @Suite("Slab differential (vs stable-index oracle)")
 struct SlabDifferentialTests {
 
-    @Test("600 mixed ops: duplicates, interleaved insert/remove/update/peek, slot reuse")
-    func differentialAgainstIndexOracle() throws {
+    @Test
+    func `600 mixed ops: duplicates, interleaved insert/remove/update/peek, slot reuse`() throws {
         var rng = SplitMix64(seed: 0x5EED_5148_ABCD_0001)
         var slab = Slab<Int>(minimumCapacity: 64)  // fixed capacity -> fill/drain cycling
 

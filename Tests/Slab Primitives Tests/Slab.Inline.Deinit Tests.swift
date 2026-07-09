@@ -33,9 +33,6 @@ struct SlabInlineDeinitTests {
 
     final class Tracker: @unchecked Sendable {
         private var _storage: [Int] = []
-        var count: Int { _storage.count }
-        var deinitOrder: [Int] { _storage }
-        func append(_ id: Int) { _storage.append(id) }
     }
 
     struct TrackedElement: ~Copyable {
@@ -66,4 +63,10 @@ struct SlabInlineDeinitTests {
             let _ = Slab<TrackedElement>.Inline<4>()
         }
     }
+}
+
+extension SlabInlineDeinitTests.Tracker {
+    var count: Int { _storage.count }
+    var deinitOrder: [Int] { _storage }
+    func append(_ id: Int) { _storage.append(id) }
 }

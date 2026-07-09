@@ -80,7 +80,7 @@ struct SlabInlineTests {
 
         // Fill-to-capacity: the next auto-insert overflows with `.full`.
         var overflowed = false
-        do {
+        do throws(Slab<Int>.Inline<2>.Error) {
             _ = try slab.insert(3)
         } catch {
             overflowed = true

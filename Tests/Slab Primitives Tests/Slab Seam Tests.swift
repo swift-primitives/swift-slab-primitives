@@ -32,8 +32,8 @@ import Testing
 struct SlabSeamTests {
 
     // L1 — the count/occupancy ledger stays honest through insert/remove/update.
-    @Test("[DS-024]-style L1: count == occupancy == #occupied at every step")
-    func countOccupancyHonesty() throws {
+    @Test
+    func `[DS-024]-style L1: count == occupancy == #occupied at every step`() throws {
         var slab = Slab<Int>(minimumCapacity: 16)
         let empty0 = slab.isEmpty
         let count0 = Int(clamping: slab.count)
@@ -70,8 +70,8 @@ struct SlabSeamTests {
     }
 
     // L2 — the defining law: removing one slot never invalidates the others.
-    @Test("[DS-024]-style L2: an index survives other slots' removal (stable index)")
-    func stableIndexAcrossOtherRemovals() throws {
+    @Test
+    func `[DS-024]-style L2: an index survives other slots' removal (stable index)`() throws {
         var slab = Slab<Int>(minimumCapacity: 16)
         let a = try slab.insert(100)
         let b = try slab.insert(200)
@@ -101,8 +101,8 @@ struct SlabSeamTests {
     }
 
     // L3 — a removed slot is reused (first-vacant returns it; re-insert lands there).
-    @Test("[DS-024]-style L3: slot reuse after removal")
-    func slotReuse() throws {
+    @Test
+    func `[DS-024]-style L3: slot reuse after removal`() throws {
         var slab = Slab<Int>(minimumCapacity: 16)
         let a = try slab.insert(1)
         _ = try slab.insert(2)
@@ -121,8 +121,8 @@ struct SlabSeamTests {
     }
 
     // L4 — capacity fence + addressed-miss errors.
-    @Test("[DS-024]-style L4: capacity fence and addressed-miss errors")
-    func capacityFenceAndMisses() throws {
+    @Test
+    func `[DS-024]-style L4: capacity fence and addressed-miss errors`() throws {
         var slab = Slab<Int>(minimumCapacity: 1)
         // Fill to capacity via the __unchecked fast path.
         while !slab.isFull() {
