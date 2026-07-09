@@ -43,8 +43,8 @@ extension SplitMix64 {
     }
 }
 
-@Suite("Slab differential (vs stable-index oracle)")
-struct SlabDifferentialTests {
+@Suite
+struct `Slab Differential Tests` {
 
     @Test
     func `600 mixed ops: duplicates, interleaved insert/remove/update/peek, slot reuse`() throws {

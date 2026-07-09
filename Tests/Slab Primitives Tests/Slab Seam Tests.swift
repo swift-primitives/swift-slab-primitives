@@ -28,8 +28,8 @@ import Testing
 //
 // Move-only discipline (playbook §5): every observation of `slab` is bound to a local.
 
-@Suite("Slab seam laws (stable-index)")
-struct SlabSeamTests {
+@Suite
+struct `Slab Seam Tests` {
 
     // L1 — the count/occupancy ledger stays honest through insert/remove/update.
     @Test

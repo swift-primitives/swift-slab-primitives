@@ -17,8 +17,8 @@ import Testing
 // `#expect(slab.method(…))` would capture `slab` (the `#expect` function-call check
 // requires the receiver `Copyable`). Every observation is bound to a local first.
 
-@Suite("Slab")
-struct SlabTests {
+@Suite
+struct `Slab Tests` {
 
     // MARK: - Initialization
 

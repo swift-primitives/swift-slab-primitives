@@ -27,13 +27,12 @@ import Testing
 // (swift-issue-inlinearray-class-field-write-elision), so behavioral checks run DEBUG-only,
 // matching the deinit suite.
 @Suite(
-    "Slab - Inline",
     .disabled(
         if: !_isDebugAssertConfiguration(),
         "release-blocked: swift-issue-inlinearray-class-field-write-elision (Slab<E>.Inline inline arm)"
     )
 )
-struct SlabInlineTests {
+struct `Slab.Inline Tests` {
 
     @Test
     func `Copyable element surface — insert at, peek, update, remove`() throws {

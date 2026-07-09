@@ -23,13 +23,12 @@ import Testing
 // `-O`, pending the occupancy-placement ruling (HANDOFF-sparse-occupancy-placement.md).
 // (Base heap `Slab` is release-correct and covered by the "Slab" suite.)
 @Suite(
-    "Slab - Inline Deinit",
     .disabled(
         if: !_isDebugAssertConfiguration(),
         "release-blocked: swift-issue-inlinearray-class-field-write-elision (Slab<E>.Inline inline arm); pending HANDOFF-sparse-occupancy-placement.md"
     )
 )
-struct SlabInlineDeinitTests {
+struct `Slab.Inline.Deinit Tests` {
 
     final class Tracker: @unchecked Sendable {
         private var _storage: [Int] = []
@@ -65,7 +64,7 @@ struct SlabInlineDeinitTests {
     }
 }
 
-extension SlabInlineDeinitTests.Tracker {
+extension `Slab.Inline.Deinit Tests`.Tracker {
     var count: Int { _storage.count }
     var deinitOrder: [Int] { _storage }
     func append(_ id: Int) { _storage.append(id) }
