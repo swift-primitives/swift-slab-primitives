@@ -23,7 +23,6 @@ struct `Slab Tests` {
     @Suite struct `Edge Case` {}
     @Suite struct Integration {}
 
-
     // MARK: - Initialization
 
     @Test

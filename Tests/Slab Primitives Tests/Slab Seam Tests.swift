@@ -34,7 +34,6 @@ struct `Slab Seam Tests` {
     @Suite struct `Edge Case` {}
     @Suite struct Integration {}
 
-
     // L1 — the count/occupancy ledger stays honest through insert/remove/update.
     @Test
     func `[DS-024]-style L1: count == occupancy == #occupied at every step`() throws {
