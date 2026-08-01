@@ -19,6 +19,10 @@ import Testing
 
 @Suite
 struct `Slab Tests` {
+    @Suite struct Unit {}
+    @Suite struct `Edge Case` {}
+    @Suite struct Integration {}
+
 
     // MARK: - Initialization
 
@@ -173,6 +177,10 @@ struct `Slab Tests` {
         // minimumCapacity rounds up to word-aligned slot count,
         // so fill until actually full.
         while !slab.isFull() {
+            // swift-linter:disable:next unchecked call site
+            // REASON: [CONV-001] same-package test use — the loop condition
+            // (`!slab.isFull()`) is the freshly-checked vacancy proof for the
+            // index handed to `__unchecked:` on the very next line.
             slab.insert(0, __unchecked: slab.firstVacant()!)
         }
         let full = slab.isFull()

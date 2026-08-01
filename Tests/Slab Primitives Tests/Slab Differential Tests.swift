@@ -45,6 +45,10 @@ extension SplitMix64 {
 
 @Suite
 struct `Slab Differential Tests` {
+    @Suite struct Unit {}
+    @Suite struct `Edge Case` {}
+    @Suite struct Integration {}
+
 
     @Test
     func `600 mixed ops: duplicates, interleaved insert/remove/update/peek, slot reuse`() throws {

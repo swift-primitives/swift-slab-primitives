@@ -29,12 +29,15 @@ import Testing
     )
 )
 struct `Slab.Inline.Deinit Tests` {
+    @Suite struct Unit {}
+    @Suite struct `Edge Case` {}
+    @Suite struct Integration {}
 
     final class Tracker: @unchecked Sendable {
         private var _storage: [Int] = []
     }
 
-    struct TrackedElement: ~Copyable {
+    struct Tracked: ~Copyable {
         let id: Int
         let tracker: Tracker
         init(_ id: Int, tracker: Tracker) {
@@ -48,10 +51,10 @@ struct `Slab.Inline.Deinit Tests` {
     func `Inline deinit destroys all elements`() throws {
         let tracker = Tracker()
         do {
-            var slab = Slab<TrackedElement>.Inline<4>()
-            try slab.insert(TrackedElement(1, tracker: tracker))
-            try slab.insert(TrackedElement(2, tracker: tracker))
-            try slab.insert(TrackedElement(3, tracker: tracker))
+            var slab = Slab<Tracked>.Inline<4>()
+            try slab.insert(Tracked(1, tracker: tracker))
+            try slab.insert(Tracked(2, tracker: tracker))
+            try slab.insert(Tracked(3, tracker: tracker))
         }
         #expect(tracker.count == 3)
     }
@@ -59,13 +62,13 @@ struct `Slab.Inline.Deinit Tests` {
     @Test
     func `Inline empty deinit does not crash`() {
         do {
-            let _ = Slab<TrackedElement>.Inline<4>()
+            let _ = Slab<Tracked>.Inline<4>()
         }
     }
 }
 
 extension `Slab.Inline.Deinit Tests`.Tracker {
     var count: Int { _storage.count }
-    var deinitOrder: [Int] { _storage }
+    var order: [Int] { _storage }
     func append(_ id: Int) { _storage.append(id) }
 }

@@ -30,6 +30,10 @@ import Testing
 
 @Suite
 struct `Slab Seam Tests` {
+    @Suite struct Unit {}
+    @Suite struct `Edge Case` {}
+    @Suite struct Integration {}
+
 
     // L1 — the count/occupancy ledger stays honest through insert/remove/update.
     @Test
@@ -126,6 +130,10 @@ struct `Slab Seam Tests` {
         var slab = Slab<Int>(minimumCapacity: 1)
         // Fill to capacity via the __unchecked fast path.
         while !slab.isFull() {
+            // swift-linter:disable:next unchecked call site
+            // REASON: [CONV-001] same-package test use — the loop condition
+            // (`!slab.isFull()`) is the freshly-checked vacancy proof for the
+            // index handed to `__unchecked:` on the very next line.
             slab.insert(0, __unchecked: slab.firstVacant()!)
         }
         // insert(_:) at capacity throws .full.

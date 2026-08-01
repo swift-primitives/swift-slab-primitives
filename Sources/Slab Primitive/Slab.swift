@@ -70,7 +70,9 @@ public struct __Slab<S: ~Copyable>: ~Copyable {
     /// Wraps an existing column.
     @inlinable
     public init(column: consuming S) { self.column = column }
+}
 
+extension __Slab where S: ~Copyable {
     /// Consumes the slab, yielding its storage column.
     @inlinable
     public consuming func take() -> S { column }

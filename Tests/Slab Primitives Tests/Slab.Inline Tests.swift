@@ -33,6 +33,9 @@ import Testing
     )
 )
 struct `Slab.Inline Tests` {
+    @Suite struct Unit {}
+    @Suite struct `Edge Case` {}
+    @Suite struct Integration {}
 
     @Test
     func `Copyable element surface — insert at, peek, update, remove`() throws {
