@@ -124,6 +124,7 @@ extension __Slab where S: ~Copyable {
         column.insert(consume element, at: slot)
     }
 
+    // swift-format-ignore: AlwaysUseLowerCamelCase
     /// Inserts an element at the specified slot index without occupancy checking.
     @inlinable
     public mutating func insert<E: ~Copyable>(
@@ -150,6 +151,7 @@ extension __Slab where S: ~Copyable {
         return column.remove(at: slot)
     }
 
+    // swift-format-ignore: AlwaysUseLowerCamelCase
     /// Removes and returns the element at the specified slot index without occupancy checking.
     @inlinable
     public mutating func remove<E: ~Copyable>(
