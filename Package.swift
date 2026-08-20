@@ -1,15 +1,15 @@
-// swift-tools-version: 6.3.3
+// swift-tools-version: 6.4
 
 import PackageDescription
 
 let package = Package(
     name: "swift-slab-primitives",
     platforms: [
-        .macOS("27"),
-        .iOS("27"),
-        .tvOS("27"),
-        .watchOS("27"),
-        .visionOS("27")
+        .macOS(.v27),
+        .iOS(.v27),
+        .tvOS(.v27),
+        .watchOS(.v27),
+        .visionOS(.v27),
     ],
     products: [
         // MARK: - Base (ADT-tower W2 shape: carrier `__Slab<S>` + front door `Slab<E>`)
@@ -25,18 +25,48 @@ let package = Package(
         .library(name: "Slab Primitives Test Support", targets: ["Slab Primitives Test Support"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/swift-primitives/swift-index-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-finite-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-bit-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-collection-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-sequence-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-buffer-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-buffer-slab-primitives.git", branch: "main"),
+        .package(
+            url: "https://github.com/swift-primitives/swift-index-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-finite-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-bit-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-collection-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-sequence-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-buffer-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-buffer-slab-primitives.git",
+            branch: "main"
+        ),
         // E2 (storage-small-substrate.md): verbose truth form Storage<E>.Contiguous<Memory.Heap<E>>
         // needs direct deps (MemberImportVisibility) on the declaring modules.
-        .package(url: "https://github.com/swift-primitives/swift-storage-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-memory-heap-primitives.git", branch: "main"),
-        .package(url: "https://github.com/swift-primitives/swift-memory-allocation-primitives.git", branch: "main"),
+        .package(
+            url: "https://github.com/swift-primitives/swift-storage-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-memory-heap-primitives.git",
+            branch: "main"
+        ),
+        .package(
+            url: "https://github.com/swift-primitives/swift-memory-allocation-primitives.git",
+            branch: "main"
+        ),
     ],
     targets: [
 
@@ -50,9 +80,15 @@ let package = Package(
                 .product(name: "Bit Primitives", package: "swift-bit-primitives"),
                 .product(name: "Buffer Slab Primitives", package: "swift-buffer-slab-primitives"),
                 .product(name: "Index Primitives", package: "swift-index-primitives"),
-                .product(name: "Storage Contiguous Primitives", package: "swift-storage-primitives"),
+                .product(
+                    name: "Storage Contiguous Primitives",
+                    package: "swift-storage-primitives"
+                ),
                 .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
-                .product(name: "Memory Allocator Primitive", package: "swift-memory-allocation-primitives"),
+                .product(
+                    name: "Memory Allocator Primitive",
+                    package: "swift-memory-allocation-primitives"
+                ),
             ]
         ),
 
@@ -64,13 +100,22 @@ let package = Package(
             dependencies: [
                 "Slab Primitive",
                 .product(name: "Buffer Primitive", package: "swift-buffer-primitives"),
-                .product(name: "Buffer Slab Inline Primitives", package: "swift-buffer-slab-primitives"),
+                .product(
+                    name: "Buffer Slab Inline Primitives",
+                    package: "swift-buffer-slab-primitives"
+                ),
                 .product(name: "Bit Primitives", package: "swift-bit-primitives"),
                 .product(name: "Finite Bounded Primitives", package: "swift-finite-primitives"),
                 .product(name: "Index Primitives", package: "swift-index-primitives"),
-                .product(name: "Storage Contiguous Primitives", package: "swift-storage-primitives"),
+                .product(
+                    name: "Storage Contiguous Primitives",
+                    package: "swift-storage-primitives"
+                ),
                 .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
-                .product(name: "Memory Allocator Primitive", package: "swift-memory-allocation-primitives"),
+                .product(
+                    name: "Memory Allocator Primitive",
+                    package: "swift-memory-allocation-primitives"
+                ),
             ]
         ),
 
@@ -83,9 +128,15 @@ let package = Package(
                 .product(name: "Buffer Slab Primitives", package: "swift-buffer-slab-primitives"),
                 .product(name: "Index Primitives", package: "swift-index-primitives"),
                 .product(name: "Sequence Primitives", package: "swift-sequence-primitives"),
-                .product(name: "Storage Contiguous Primitives", package: "swift-storage-primitives"),
+                .product(
+                    name: "Storage Contiguous Primitives",
+                    package: "swift-storage-primitives"
+                ),
                 .product(name: "Memory Heap Primitives", package: "swift-memory-heap-primitives"),
-                .product(name: "Memory Allocator Primitive", package: "swift-memory-allocation-primitives"),
+                .product(
+                    name: "Memory Allocator Primitive",
+                    package: "swift-memory-allocation-primitives"
+                ),
             ]
         ),
 
@@ -95,7 +146,10 @@ let package = Package(
             dependencies: [
                 "Slab Primitives",
                 "Slab Inline Primitive",
-                .product(name: "Buffer Primitives Test Support", package: "swift-buffer-primitives"),
+                .product(
+                    name: "Buffer Primitives Test Support",
+                    package: "swift-buffer-primitives"
+                ),
                 .product(name: "Index Primitives Test Support", package: "swift-index-primitives"),
             ]
         ),
@@ -106,11 +160,23 @@ let package = Package(
             dependencies: [
                 "Slab Primitives",
                 .product(name: "Index Primitives Test Support", package: "swift-index-primitives"),
-                .product(name: "Finite Primitives Test Support", package: "swift-finite-primitives"),
+                .product(
+                    name: "Finite Primitives Test Support",
+                    package: "swift-finite-primitives"
+                ),
                 .product(name: "Bit Primitives Test Support", package: "swift-bit-primitives"),
-                .product(name: "Buffer Primitives Test Support", package: "swift-buffer-primitives"),
-                .product(name: "Collection Primitives Test Support", package: "swift-collection-primitives"),
-                .product(name: "Sequence Primitives Test Support", package: "swift-sequence-primitives"),
+                .product(
+                    name: "Buffer Primitives Test Support",
+                    package: "swift-buffer-primitives"
+                ),
+                .product(
+                    name: "Collection Primitives Test Support",
+                    package: "swift-collection-primitives"
+                ),
+                .product(
+                    name: "Sequence Primitives Test Support",
+                    package: "swift-sequence-primitives"
+                ),
             ],
             path: "Tests/Support"
         ),
