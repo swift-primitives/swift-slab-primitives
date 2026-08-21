@@ -1,31 +1,9 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Finite_Bounded_Primitives
 import Index_Primitives
 import Slab_Inline_Primitive
 import Slab_Primitives
 import Testing
 
-// [DS-027].1 reachability for the un-parked `Slab<E>.Inline<n>` door: the alias resolves and the
-// inline-column op-pin set (construct / insert-at / remove-at / update / peek / firstVacant /
-// isFull / isOccupied / removeAll / composed auto-insert) reaches the `Buffer.Slab.Inline` column
-// for both Copyable and move-only elements, incl. fill-to-capacity.
-//
-// The slab value is `~Copyable`, so op results are bound to locals before `#expect` (the macro
-// captures its receiver and cannot copy a move-only value).
-//
-// RELEASE-GUARD: the `Buffer.Slab.Inline` occupancy-bitmap write elides under `-O`
-// (swift-issue-inlinearray-class-field-write-elision), so behavioral checks run DEBUG-only,
-// matching the deinit suite.
 @Suite(
     .disabled(
         if: !_isDebugAssertConfiguration(),
@@ -80,7 +58,6 @@ struct `Slab.Inline Tests` {
         #expect(a != b)
         #expect(full)
 
-        // Fill-to-capacity: the next auto-insert overflows with `.full`.
         var overflowed = false
         do throws(Slab<Int>.Inline<2>.Error) {
             _ = try slab.insert(3)

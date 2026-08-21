@@ -1,27 +1,8 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Slab_Inline_Primitive
 import Testing
 
 @testable import Slab_Primitives
 
-// Migrated from the parked `Slab.Static` deinit suite at the W3 un-park (the type is re-derived
-// as the `Slab<E>.Inline<n>` front-door alias, not resurrected).
-//
-// RELEASE-GUARD (swift-institute/Issues/swift-issue-inlinearray-class-field-write-elision):
-// `Slab<E>.Inline<n>` is backed by `Buffer.Slab.Inline`, whose occupancy-bitmap writes are elided
-// under `-O` (the inline-arm release miscompile). These deinit tests run in DEBUG and SKIP under
-// `-O`, pending the occupancy-placement ruling (HANDOFF-sparse-occupancy-placement.md).
-// (Base heap `Slab` is release-correct and covered by the "Slab" suite.)
 @Suite(
     .disabled(
         if: !_isDebugAssertConfiguration(),

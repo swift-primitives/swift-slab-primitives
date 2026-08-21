@@ -12,16 +12,12 @@ let package = Package(
         .visionOS(.v27),
     ],
     products: [
-        // MARK: - Base (ADT-tower W2 shape: carrier `__Slab<S>` + front door `Slab<E>`)
+
         .library(name: "Slab Primitive", targets: ["Slab Primitive"]),
         .library(name: "Slab Primitives", targets: ["Slab Primitives"]),
 
-        // MARK: - Inline variant ([DS-027].1: own product, NOT umbrella-re-exported —
-        // the W3 un-park of the parked `Slab.Static`, re-homed as `Slab<E>.Inline<n>`.
-        // Units: Inline<n> = ELEMENT/slot count.)
         .library(name: "Slab Inline Primitive", targets: ["Slab Inline Primitive"]),
 
-        // MARK: - Test Support
         .library(name: "Slab Primitives Test Support", targets: ["Slab Primitives Test Support"]),
     ],
     dependencies: [
@@ -53,8 +49,7 @@ let package = Package(
             url: "https://github.com/swift-primitives/swift-buffer-slab-primitives.git",
             branch: "main"
         ),
-        // E2 (storage-small-substrate.md): verbose truth form Storage<E>.Contiguous<Memory.Heap<E>>
-        // needs direct deps (MemberImportVisibility) on the declaring modules.
+
         .package(
             url: "https://github.com/swift-primitives/swift-storage-primitives.git",
             branch: "main"
@@ -70,13 +65,12 @@ let package = Package(
     ],
     targets: [
 
-        // MARK: - Carrier + front door (the ADT-tower W2 core: `__Slab<S>` + `Slab<E>` + Slab.Error)
         .target(
             name: "Slab Primitive",
             dependencies: [
-                // Seam (D3): the generic observability surface the seam-generic ops ride.
+
                 .product(name: "Buffer Protocol Primitives", package: "swift-buffer-primitives"),
-                // Column vocabulary: the default Slab-buffer / heap column.
+
                 .product(name: "Bit Primitives", package: "swift-bit-primitives"),
                 .product(name: "Buffer Slab Primitives", package: "swift-buffer-slab-primitives"),
                 .product(name: "Index Primitives", package: "swift-index-primitives"),
@@ -92,9 +86,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Inline variant (the un-parked `Slab<E>.Inline<n>`: alias + inline-column
-        // op-pin set over the existing `Buffer.Slab.Inline` column). [DS-027].1: own lean
-        // target, NOT umbrella-re-exported — the Store.Inline leaf dep lands HERE only.
         .target(
             name: "Slab Inline Primitive",
             dependencies: [
@@ -119,7 +110,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Umbrella ([MOD-005]): carrier module + the `peek` non-destructive read.
         .target(
             name: "Slab Primitives",
             dependencies: [
@@ -140,7 +130,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Tests
         .testTarget(
             name: "Slab Primitives Tests",
             dependencies: [
@@ -154,7 +143,6 @@ let package = Package(
             ]
         ),
 
-        // MARK: - Test Support
         .target(
             name: "Slab Primitives Test Support",
             dependencies: [

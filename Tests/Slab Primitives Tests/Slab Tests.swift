@@ -1,29 +1,12 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-primitives open source project
-//
-// Copyright (c) 2024-2026 Coen ten Thije Boonkkamp and the swift-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Testing
 
 @testable import Slab_Primitives
-
-// Move-only discipline (playbook §5): the canonical `Slab<E>` is move-only, so a bare
-// `#expect(slab.method(…))` would capture `slab` (the `#expect` function-call check
-// requires the receiver `Copyable`). Every observation is bound to a local first.
 
 @Suite
 struct `Slab Tests` {
     @Suite struct Unit {}
     @Suite struct `Edge Case` {}
     @Suite struct Integration {}
-
-    // MARK: - Initialization
 
     @Test
     func `init creates empty slab`() {
@@ -42,8 +25,6 @@ struct `Slab Tests` {
         #expect(empty == true)
         #expect(occ == .zero)
     }
-
-    // MARK: - Insert and Remove
 
     @Test
     func `insert at index roundtrip`() throws {
@@ -111,8 +92,6 @@ struct `Slab Tests` {
         }
     }
 
-    // MARK: - Update
-
     @Test
     func `update swaps element`() throws {
         var slab = Slab<Int>(minimumCapacity: 1)
@@ -135,8 +114,6 @@ struct `Slab Tests` {
         }
     }
 
-    // MARK: - Peek
-
     @Test
     func `peek returns element without removing`() throws {
         var slab = Slab<Int>(minimumCapacity: 1)
@@ -156,8 +133,6 @@ struct `Slab Tests` {
         #expect(peeked == nil)
     }
 
-    // MARK: - Occupancy Queries
-
     @Test
     func `firstVacant returns first empty slot`() throws {
         var slab = Slab<Int>(minimumCapacity: 3)
@@ -173,13 +148,9 @@ struct `Slab Tests` {
     @Test
     func `isFull when all slots occupied`() throws {
         var slab = Slab<Int>(minimumCapacity: 2)
-        // minimumCapacity rounds up to word-aligned slot count,
-        // so fill until actually full.
+
         while !slab.isFull() {
-            // swift-linter:disable:next unchecked call site
-            // REASON: [CONV-001] same-package test use — the loop condition
-            // (`!slab.isFull()`) is the freshly-checked vacancy proof for the
-            // index handed to `__unchecked:` on the very next line.
+
             slab.insert(0, __unchecked: slab.firstVacant()!)
         }
         let full = slab.isFull()
@@ -187,8 +158,6 @@ struct `Slab Tests` {
         #expect(full == true)
         #expect(vacant == nil)
     }
-
-    // MARK: - Slot Reuse
 
     @Test
     func `slot reuse after removal`() throws {
@@ -199,8 +168,6 @@ struct `Slab Tests` {
         let removed = try slab.remove(at: slot)
         #expect(removed == 20)
     }
-
-    // MARK: - Remove All
 
     @Test
     func `removeAll clears all slots`() throws {
@@ -215,8 +182,6 @@ struct `Slab Tests` {
         #expect(empty == true)
         #expect(occ == .zero)
     }
-
-    // MARK: - Drain
 
     @Test
     func `drain removes all elements`() throws {
